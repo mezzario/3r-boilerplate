@@ -26,7 +26,7 @@ export function configure() {
     let enhancer = Redux.compose(
         Redux.applyMiddleware(...middlewares),
         // please install https://github.com/zalmoxisus/redux-devtools-extension
-        // chrome extension for redux dev tools to work (open Redux tab in Chrome Developer Tools)
+        // chrome extension to use redux dev tools (open Redux tab in Chrome Developer Tools)
         (window as any).devToolsExtension ? (window as any).devToolsExtension() : f => f);
 
     let store = enhancer(Redux.createStore)(reducer);

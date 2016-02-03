@@ -13,11 +13,9 @@ import "./index.less";
 
 ReactDOM.render(
     <ReactRedux.Provider store={AppStore.configure()}>
-        <div>
-            <ReactRouter.Router history={AppHistory}>
-                <ReactRouter.Route path="/(:todosView)" component={MainPage} />
-            </ReactRouter.Router>
-        </div>
+        <ReactRouter.Router history={AppHistory}>
+            <ReactRouter.Route path="/(:todosView)" component={MainPage} />
+        </ReactRouter.Router>
     </ReactRedux.Provider>,
     document.getElementById("root")
 );
