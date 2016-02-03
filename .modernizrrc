@@ -1,0 +1,8 @@
+{
+    "options": [
+        "setClasses"
+    ],
+    "feature-detects": [
+        "touchevents"
+    ]
+}

@@ -1,0 +1,27 @@
+@gMonoFontFamily: Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace, serif;
+@gMonoFontSize: .93rem;
+@gInactiveColor: #ccc;
+@gErrorColor: darkred;
+
+.placeholder(@rules) {
+    &::-webkit-input-placeholder { @rules(); }
+    &:-moz-placeholder           { @rules(); }
+    &::-moz-placeholder          { @rules(); }
+    &:-ms-input-placeholder      { @rules(); }
+}
+
+.monoFont() {
+    font-family: @gMonoFontFamily;
+    font-size: @gMonoFontSize;
+}
+
+.clear() {
+    &:after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: "";
+        clear: both;
+        height: 0;
+    }
+}

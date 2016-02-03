@@ -1,0 +1,57 @@
+@import "../../content/globals";
+
+:local(.root) {
+    padding-top: 2em !important;
+
+    > .column {
+        max-width: 500px;
+    }
+}
+
+:local(.mainHeader) {
+    font-weight: 500;
+
+    > i {
+        //font-size: 1.65rem;
+        position: relative;
+        top: .15em;
+        left: .05em;
+    }
+}
+
+:local(.newTodoInput) {
+    .placeholder({
+        color: @gInactiveColor !important;
+    });
+}
+
+:local(.viewSelector) {
+    margin-top: 1.2rem !important;
+
+    button {
+        //font-weight: 200 !important;
+        //text-transform: uppercase !important;
+    }
+}
+
+:local(.statusBar) {
+    padding: .8em !important;
+    font-size: .9em;
+    //color: @gInactiveColor !important;
+
+    > a {
+        float: right;
+
+        > i {
+            opacity: .9;
+        }
+
+        &:hover {
+            span {
+                //text-decoration: underline;
+                border-bottom-width: 1px;
+                border-bottom-style: dashed;
+            }
+        }
+    }
+}

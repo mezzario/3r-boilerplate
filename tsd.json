@@ -1,0 +1,66 @@
+{
+    "version": "v4",
+    "repo": "borisyankov/DefinitelyTyped",
+    "ref": "master",
+    "path": "typings",
+    "bundle": "typings/tsd.d.ts",
+    "installed": {
+        "react/react.d.ts": {
+            "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
+        },
+        "react/react-dom.d.ts": {
+            "commit": "fc341765ebbb04b7109981a25dced01f488f4d94"
+        },
+        "react-mixin/react-mixin.d.ts": {
+            "commit": "16134c168d021351acb1673ee9659644fc58c424"
+        },
+        "fastclick/fastclick.d.ts": {
+            "commit": "81a7f48ea554e1baf810af905d8bd9e4eb3b4e69"
+        },
+        "node/node.d.ts": {
+            "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+        },
+        "classnames/classnames.d.ts": {
+            "commit": "b2d17b5dad042e293e77d09f2a30d281325cb606"
+        },
+        "modernizr/modernizr.d.ts": {
+            "commit": "a6ff9f6e195a334afd89e4b721d05e9520eee4c0"
+        },
+        "react-router/react-router.d.ts": {
+            "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
+        },
+        "react-router/history.d.ts": {
+            "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
+        },
+        "redux/redux.d.ts": {
+            "commit": "717a5fdb079f8dd7c19f1b22f7f656dd990f0ccf"
+        },
+        "react-redux/react-redux.d.ts": {
+            "commit": "7b3d5a6ea5acda4a81f71309f1cc62354e63b681"
+        },
+        "redux-actions/redux-actions.d.ts": {
+            "commit": "86dbea8fc37d9473fee465da4f0a21bea4f8cbd9"
+        },
+        "redux-logger/redux-logger.d.ts": {
+            "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
+        },
+        "redux-devtools/redux-devtools.d.ts": {
+            "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
+        },
+        "redux-devtools-log-monitor/redux-devtools-log-monitor.d.ts": {
+            "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
+        },
+        "redux-devtools-dock-monitor/redux-devtools-dock-monitor.d.ts": {
+            "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
+        },
+        "whatwg-fetch/whatwg-fetch.d.ts": {
+            "commit": "3d2f9971a107e2eee2de3ec5318f5c54071e16ed"
+        },
+        "redux-thunk/redux-thunk.d.ts": {
+            "commit": "717a5fdb079f8dd7c19f1b22f7f656dd990f0ccf"
+        },
+        "core-js/core-js.d.ts": {
+            "commit": "e69fe60f2d6377ea4fae539493997b098f52cad1"
+        }
+    }
+}
