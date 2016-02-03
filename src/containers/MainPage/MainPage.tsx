@@ -94,6 +94,18 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
                 <div className="column">
                     <h1 className={classNames("ui header orange", Styles.mainHeader)}><i className="icon-checklist" /> todos</h1>
 
+                    <div className={Styles.mainHeaderButtons}>
+                        <div className="button">
+                            <a className="github-button"
+                                style={{display: "none"}}
+                                href="https://github.com/mezzario/typescript-redux-boilerplate"
+                                data-count-href="/mezzario/typescript-redux-boilerplate/stargazers"
+                                data-count-api="/repos/mezzario/typescript-redux-boilerplate#stargazers_count"
+                                data-count-aria-label="# stargazers on GitHub"
+                                aria-label="Star typescript-redux-boilerplate on GitHub">Star</a>
+                        </div>
+                    </div>
+
                     <div className="ui form">
                         <div className="field">
                             <input
