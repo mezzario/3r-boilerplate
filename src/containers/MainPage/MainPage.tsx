@@ -92,7 +92,7 @@ class MainPage extends React.Component<MainPageProps, MainPageState> {
         return (
             <div className={classNames("ui stackable centered grid", Styles.root)}>
                 <div className="column">
-                    <h1 className={classNames("ui header orange", Styles.mainHeader)}><i className="icon-checklist" /> todos</h1>
+                    <h2 className={classNames("ui header orange", Styles.mainHeader)}><i className="icon-checklist" /> todos</h2>
 
                     <div className={Styles.mainHeaderButtons}>
                         <div className="button">

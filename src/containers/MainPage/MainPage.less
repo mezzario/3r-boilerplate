@@ -4,7 +4,7 @@
     padding-top: 2em !important;
 
     > .column {
-        max-width: 500px;
+        max-width: 600px;
     }
 }
 
@@ -26,8 +26,11 @@
 }
 
 :local(.newTodoInput) {
+    font-weight: 500;
+
     .placeholder({
         color: @gInactiveColor !important;
+        font-weight: normal;
     });
 }
 
@@ -41,8 +44,8 @@
 }
 
 :local(.statusBar) {
-    padding: .8em !important;
-    font-size: .9em;
+    padding: .725em !important;
+    //font-size: .9em;
     //color: @gInactiveColor !important;
 
     > a {

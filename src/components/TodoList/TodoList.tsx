@@ -51,7 +51,7 @@ export default class TodoList extends React.Component<TodoListProps, TodoListSta
     render() {
         const todos = this.props.todos.length ? this.props.todos : [{ id: 0 } as TodoItem];
         const preset = { stiffness: 300, damping: 30 };
-        const itemHeight = 45;
+        const itemHeight = 47;
 
         let enterStyle = { "opacity": 0,                 "height": 0                          };
         let usualStyle = { "opacity": spring(1),         "height": spring(itemHeight, preset) };

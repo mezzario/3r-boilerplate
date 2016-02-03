@@ -1,6 +1,6 @@
 @import "../../content/globals";
 
-@textFontSize: 1.1rem;
+@textFontSize: 1rem;
 
 :local(.root) {
     position: relative;
@@ -16,6 +16,7 @@
         color: @gInactiveColor;
         margin: 0;
         padding: .3em;
+        font-size: 1.2em;
 
         &.edit,
         &.save {
@@ -28,7 +29,8 @@
         }
 
         &.edit {
-            font-size: 1.1em;
+            font-size: 1.3em;
+            margin-top: .1em;
         }
 
         &.edit,
@@ -45,7 +47,7 @@
         top: 50%;
         transform: translateY(-50%);
         left: .9em;
-        right: 4.7em;
+        right: 5em;
 
         .checkbox {
             cursor: pointer;
