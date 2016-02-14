@@ -7,14 +7,19 @@ import * as ReactRedux from "react-redux";
 import * as ReactRouter from "react-router";
 import * as AppStore from "./core/Store";
 import AppHistory from "./core/History";
-import MainPage from "./containers/MainPage/MainPage";
+import * as Containers from "./containers";
 import * as FastClick from "fastclick";
 import "./index.less";
 
 ReactDOM.render(
     <ReactRedux.Provider store={AppStore.configure()}>
         <ReactRouter.Router history={AppHistory}>
-            <ReactRouter.Route path="/(:todosView)" component={MainPage} />
+            <ReactRouter.Route path="/" component={Containers.App}>
+                <ReactRouter.IndexRoute component={Containers.Home} />
+                <ReactRouter.Route path="active" component={Containers.Home} />
+                <ReactRouter.Route path="completed" component={Containers.Home} />
+                <ReactRouter.Route path="*" component={Containers.NotFound} />
+            </ReactRouter.Route>
         </ReactRouter.Router>
     </ReactRedux.Provider>,
     document.getElementById("root")

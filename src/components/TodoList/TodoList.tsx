@@ -6,7 +6,7 @@ const classNames = require("classnames") as ClassNamesFn;
 const Styles = require("./TodoList.less");
 import { TodoItem } from "../../core/Todos";
 import * as Action from "../../core/Actions";
-import TodoListItem from "../TodoListItem/TodoListItem";
+import * as Components from "../../components";
 const { spring, presets, TransitionMotion } = require("react-motion");
 
 interface TodoListProps extends React.Props<TodoList> {
@@ -26,7 +26,7 @@ interface TodoListState {
 }
 
 export default class TodoList extends React.Component<TodoListProps, TodoListState> {
-    private _itemComps: { [id: string]: TodoListItem } = {};
+    private _itemComps: { [id: string]: Components.TodoListItem } = {};
 
     constructor(props: TodoListProps) {
         super(props);
@@ -74,7 +74,7 @@ export default class TodoList extends React.Component<TodoListProps, TodoListSta
 
                         {configs.map(({ key, data: todo, style }) =>
                             todo.id
-                                ? <TodoListItem
+                                ? <Components.TodoListItem
                                     key={key}
                                     todo={todo}
                                     style={style}

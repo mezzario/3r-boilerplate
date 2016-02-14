@@ -13,11 +13,6 @@ export default ReduxActions.handleActions({
     [ReduxRouter.UPDATE_LOCATION]: (state, action) => {
         let url = (action.payload as HistoryModule.Location).pathname;
         let todosView = getTodosViewFromUrl(url);
-        let fixedUrl = getUrlFromTodosView(todosView);
-
-        if (fixedUrl !== url)
-            updateTodosViewInUrl(todosView, true);
-
         return todosView;
     }
 }, TodosView.All);
