@@ -21,6 +21,8 @@ var _cssLoaders = [
     "postcss"
 ];
 
+var _lessLoaders = _cssLoaders.concat(["less"]);
+
 module.exports = {
     debug: choose({
         $default: true,
@@ -71,8 +73,8 @@ module.exports = {
 
             { test: /\.less$/i,
               loader: choose({
-                  $default: _cssLoaders.concat("less").join("!"),
-                  production: ExtractTextPlugin.extract(_cssLoaders[0], _cssLoaders.slice(1).concat("less").join("!")) }) },
+                  $default: _lessLoaders.join("!"),
+                  production: ExtractTextPlugin.extract(_lessLoaders[0], _lessLoaders.slice(1).join("!")) }) },
 
             { test: /\.(jpe?g|png|gif|svg)$/i,
               loaders: [
@@ -93,7 +95,10 @@ module.exports = {
             new Webpack.DefinePlugin({
                 "process.env": {
                     "NODE_ENV": JSON.stringify("development")
-                }
+                },
+                __CLIENT__: true,
+                __SERVER__: false,
+                __DEVELOPMENT__: true
             }),
             new Webpack.HotModuleReplacementPlugin(),
             new Webpack.NoErrorsPlugin()
@@ -102,7 +107,10 @@ module.exports = {
             new Webpack.DefinePlugin({
                 "process.env": {
                     "NODE_ENV": JSON.stringify("production")
-                }
+                },
+                __CLIENT__: true,
+                __SERVER__: false,
+                __DEVELOPMENT__: false
             }),
             new Webpack.optimize.OccurenceOrderPlugin(),
             new Webpack.optimize.UglifyJsPlugin({

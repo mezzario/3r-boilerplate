@@ -15,7 +15,7 @@ declare module ReduxActions {
     type PayloadCreator<T> = (...args: any[]) => T;
     type MetaCreator = (...args: any[]) => any;
 
-    type Reducer<T> = (state: T, action: Action) => T;
+    type Reducer<T> = (state: T, action: Action) => T | Function;
 
     type ReducerMap<T> = {
         [actionType: string]: Reducer<T>
@@ -31,4 +31,3 @@ declare module ReduxActions {
 declare module 'redux-actions' {
     export = ReduxActions;
 }
-

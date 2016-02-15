@@ -14,4 +14,12 @@
 /// <reference path="whatwg-fetch/whatwg-fetch.d.ts" />
 /// <reference path="redux-thunk/redux-thunk.d.ts" />
 /// <reference path="react-motion/react-motion.d.ts" />
+/// <reference path="react-router-redux/react-router-redux.d.ts" />
+/// <reference path="source-map/source-map.d.ts" />
+/// <reference path="uglify-js/uglify-js.d.ts" />
+/// <reference path="webpack/webpack.d.ts" />
 // <reference path="core-js/core-js.d.ts" />
+
+declare var __CLIENT__: boolean;
+declare var __SERVER__: boolean;
+declare var __DEVELOPMENT__: boolean;

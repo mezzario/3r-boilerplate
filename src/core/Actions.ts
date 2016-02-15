@@ -22,10 +22,6 @@ export const SetTodoCompletion = "SetTodoCompletion";
 export type SetTodoCompletionFunc = Action<{ id: number, completed: boolean }>;
 export const setTodoCompletion: SetTodoCompletionFunc = ReduxActions.createAction(SetTodoCompletion);
 
-export const SetTodosView = "SetTodosView";
-export type SetTodosViewFunc = Action<TodosView>;
-export const setTodosView: SetTodosViewFunc = ReduxActions.createAction(SetTodosView);
-
 export const ClearCompletedTodos = "ClearCompletedTodos";
 export type ClearCompletedTodosFunc = () => any;
 export const clearCompletedTodos: ClearCompletedTodosFunc = ReduxActions.createAction(ClearCompletedTodos);

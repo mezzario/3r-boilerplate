@@ -1,6 +1,7 @@
 /// <reference path="../../../typings/tsd.d.ts" />
 
 import * as React from "react"; React;
+import * as ReactRouter from "react-router";
 import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
 const shouldPureComponentUpdate = require("react-pure-render/function") as Function;
@@ -12,12 +13,9 @@ import * as Action from "../../core/Actions";
 import * as Components from "../../components";
 const { spring, presets, TransitionMotion } = require("react-motion");
 const Modernizr = require("modernizr") as __Modernizr.ModernizrStatic;
+import AppHistory from "../../core/History";
 
-interface HomeRouteParams {
-    todosView: string;
-}
-
-interface HomeProps extends React.Props<Home>, ReactRouter.RouteComponentProps<{}, HomeRouteParams> {
+interface HomeProps extends /*React.Props<Home>, */ReactRouter.RouteComponentProps<{}, {}> {
     todosView: TodosView;
     todos: TodoItem[];
     todosTotal: number;
@@ -27,7 +25,6 @@ interface HomeProps extends React.Props<Home>, ReactRouter.RouteComponentProps<{
     deleteTodo?: Action.DeleteTodoFunc;
     editTodoText: Action.EditTodoTextFunc;
     setTodoCompletion?: Action.SetTodoCompletionFunc;
-    setTodosView: Action.SetTodosViewFunc;
     clearCompletedTodos: Action.ClearCompletedTodosFunc;
 }
 
@@ -62,15 +59,10 @@ class Home extends React.Component<HomeProps, HomeState> {
             this.props.addTodo(text);
 
             if (this.props.todosView === TodosView.Completed)
-                this.props.setTodosView(TodosView.All);
+                AppHistory.push("/");
 
             input.value = "";
         }
-    }
-
-    private handleTodosViewChange(todosView: TodosView, e: React.MouseEvent) {
-        this._todoList.cancelEdit();
-        this.props.setTodosView(todosView);
     }
 
     private handleClearCompletedClick(e: React.MouseEvent) {
@@ -137,10 +129,16 @@ class Home extends React.Component<HomeProps, HomeState> {
                                     setTodoCompletion={this.props.setTodoCompletion}
                                     header={
                                         <div className={classNames("ui top attached three basic buttons", Styles.viewSelector)}>
-                                            {[[TodosView.All, "All"], [TodosView.Active, "Active"], [TodosView.Completed, "Completed"]]
-                                                .map(pair =><button key={pair[0]}
+                                            {[ [TodosView.All, "All", "/"],
+                                               [TodosView.Active, "Active", "/active"],
+                                               [TodosView.Completed, "Completed", "/completed"] ]
+                                            .map(pair =>
+                                                <ReactRouter.Link
+                                                    key={pair[0]}
                                                     className={classNames("ui button", { "active": this.props.todosView === pair[0] })}
-                                                    onClick={this.handleTodosViewChange.bind(this, pair[0])}>{pair[1]}</button>)}
+                                                    to={pair[2] as any}
+                                                    onClick={() => { this._todoList.cancelEdit(); }}
+                                                >{pair[1]}</ReactRouter.Link>)}
                                         </div>
                                     }
                                     footer={
@@ -165,16 +163,29 @@ class Home extends React.Component<HomeProps, HomeState> {
 export default ReactRedux.connect(
     // mapStateToProps
     (state: AppStore, ownProps: HomeProps) => {
-        let todos = state.todos;
-        let activeTodos = state.todos.filter((todo) => !todo.completed);
+        let todosView: TodosView;
+        let todos: TodoItem[];
+        let activeTodos = state.todos.filter(todo => !todo.completed);
 
-        switch (state.todosView) {
-            case TodosView.Active: todos = activeTodos; break;
-            case TodosView.Completed: todos = state.todos.filter((todo) => todo.completed); break;
+        switch (state.router.location.pathname.toLowerCase()) {
+            case "/active":
+                todosView = TodosView.Active;
+                todos = activeTodos;
+                break;
+
+            case "/completed":
+                todosView = TodosView.Completed;
+                todos = state.todos.filter((todo) => todo.completed);
+                break;
+
+            default:
+                todosView = TodosView.All;
+                todos = state.todos;
+                break;
         }
 
         return {
-            todosView: state.todosView,
+            todosView,
             todos,
             todosTotal: state.todos.length,
             todosLeft: activeTodos.length,
@@ -187,7 +198,6 @@ export default ReactRedux.connect(
         deleteTodo: Action.deleteTodo,
         editTodoText: Action.editTodoText,
         setTodoCompletion: Action.setTodoCompletion,
-        setTodosView: Action.setTodosView,
         clearCompletedTodos: Action.clearCompletedTodos,
     }, dispatch)
 )(Home);

@@ -4,7 +4,7 @@ import * as React from "react"; React;
 const classNames = require("classnames") as ClassNamesFn;
 const Styles = require("./App.less");
 
-interface AppProps extends React.Props<App>, ReactRouter.RouteComponentProps<{}, {}> {
+interface AppProps extends /*React.Props<App>, */ReactRouter.RouteComponentProps<{}, {}> {
 }
 
 interface AppState {
