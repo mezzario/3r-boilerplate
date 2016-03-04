@@ -28,7 +28,8 @@ export function configure(
         __CLIENT__: appTarget === "client",
         __SERVER__: appTarget === "server",
         __DEVELOPMENT__: nodeEnv === "development",
-        __PRODUCTION__: nodeEnv === "production"
+        __PRODUCTION__: nodeEnv === "production",
+        "process.env.NODE_ENV": `"${nodeEnv}"`
     };
 
     const babelOptions = {
