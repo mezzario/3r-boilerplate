@@ -8,7 +8,7 @@ import * as ReduxRouter from "react-router-redux";
 import Routes from "./core/Routes";
 import * as AppStore from "./core/Store";
 import AppHistory from "./core/History";
-import * as WebpackConfigurator from "../webpack.configurator";
+import * as WebpackConfigurator from "./configs/WebpackConfigurator";
 const Express = require("express");
 const Compression = require("compression");
 const ServeFavicon = require("serve-favicon");
@@ -25,7 +25,7 @@ app.use(Compression());
 
 if (__DEVELOPMENT__) {
     const webpack = require("webpack");
-    const webpackConfig = WebpackConfigurator.configure(AppConfig, "client", "development");
+    const webpackConfig = WebpackConfigurator.configure("client", "development");
     const webpackCompiler = webpack(webpackConfig);
 
     app.use(require("webpack-dev-middleware")(webpackCompiler, {

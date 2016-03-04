@@ -5,9 +5,11 @@
   "scripts": {
     "build:server-dev": "rimraf src/static src/server.js src/server.js.map && APP_TARGET=server NODE_ENV=development node scripts/build-server",
     "build:server-prod": "rimraf build/server.js build/server.js.map && APP_TARGET=server NODE_ENV=production node scripts/build-server && rimraf build/static/bundle.css build/static/bundle.css.map",
-    "build:client-prod": "rimraf build && APP_TARGET=client NODE_ENV=production webpack --config webpack.config.js --progress",
-    "build:prod": "rimraf build && npm run build:client-prod && npm run build:server-prod",
-    "start": "npm run build:server-dev && APP_TARGET=server NODE_ENV=development node src/server.js"
+    "build:client-prod": "rimraf build && mkdir -p build && cp src/favicon.ico build/ && APP_TARGET=client NODE_ENV=production webpack --config webpack.config.js --progress",
+    "build:prod": "npm run build:client-prod && npm run build:server-prod",
+    "start:dev": "npm run build:server-dev && APP_TARGET=server NODE_ENV=development node src/server.js",
+    "start:prod": "npm run build:prod && cd build && APP_TARGET=server NODE_ENV=production node server.js",
+    "start": "npm run start:dev"
   },
   "repository": {
     "type": "git",

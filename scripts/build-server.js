@@ -8,9 +8,8 @@ const Chalk = require("chalk");
 
 BuildUtils.transpileTsFile("src/server.ts", "src/server.js");
 
-let appConfig = eval(BuildUtils.transpileTsFile("src/configs/AppConfig.ts"));
-let webpackConfigure = eval(BuildUtils.transpileTsFile("webpack.configurator.ts"));
-let webpackConfig = webpackConfigure(appConfig, "server");
+let webpackConfigure = eval(BuildUtils.transpileTsFile("src/configs/WebpackConfigurator.ts"));
+let webpackConfig = webpackConfigure("server");
 
 Webpack(webpackConfig, (error, statsData) => {
     if (error)

@@ -2,8 +2,7 @@
 
 const BuildUtils = require("./scripts/build-utils");
 
-let appConfig = eval(BuildUtils.transpileTsFile("src/configs/AppConfig.ts"));
-let webpackConfigure = eval(BuildUtils.transpileTsFile("webpack.configurator.ts"));
-let config = webpackConfigure(appConfig);
+let webpackConfigure = eval(BuildUtils.transpileTsFile("src/configs/WebpackConfigurator.ts"));
+let config = webpackConfigure();
 
 module.exports = config;

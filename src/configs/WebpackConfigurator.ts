@@ -3,10 +3,13 @@ import * as Path from "path";
 import * as Webpack from "webpack";
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const Chalk = require("chalk");
-import * as AppConfigModule from "./src/configs/AppConfig";
+import * as AppConfigModule from "./AppConfig";
+
+export const buildSubpath = "build";
+export const staticSubpath = "static";
+export const inlineFileSizeLimit = 0x4000;
 
 export function configure(
-    appConfig: AppConfigModule.AppConfig,
     appTarget = (process.env.APP_TARGET as string || "client").trim().toLowerCase(),
     nodeEnv = (process.env.NODE_ENV as string || "development").trim().toLowerCase()
 ) {
@@ -85,22 +88,22 @@ export function configure(
             "client:development": {
                 path: Path.resolve("."),
                 pathinfo: true,
-                publicPath: "/" + appConfig.staticSubpath + "/"
+                publicPath: "/" + staticSubpath + "/"
             },
             "client:production": {
-                path: Path.resolve(".", appConfig.buildSubpath, appConfig.staticSubpath),
+                path: Path.resolve(".", buildSubpath, staticSubpath),
                 filename: "[name].[hash].js",
                 chunkFilename: "[name].[id].[chunkhash].js",
-                publicPath: "/" + appConfig.staticSubpath + "/"
+                publicPath: "/" + staticSubpath + "/"
             },
             "server:*": {
                 path: choose({
                     "*:development": Path.resolve("src"),
-                    "*:production": Path.resolve(appConfig.buildSubpath)
+                    "*:production": Path.resolve(buildSubpath)
                 }),
                 pathinfo: true,
                 filename: "server.js",
-                publicPath: "/" + appConfig.staticSubpath + "/"
+                publicPath: "/" + staticSubpath + "/"
             }
         }),
 
@@ -148,25 +151,25 @@ export function configure(
                 }, {
                     test: /\.(jpe?g|png|gif|svg)$/i,
                     loaders: [
-                        "url?limit=" + appConfig.inlineFileSizeLimit + "&hash=sha512&digest=hex&name=[hash].[ext]",
+                        "url?limit=" + inlineFileSizeLimit + "&hash=sha512&digest=hex&name=[hash].[ext]",
                         "image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false"
                     ]
                 },
 
                 { test: /\.eot(\?[a-z0-9\.#]+)?$/i,
-                  loader: "url?limit=" + appConfig.inlineFileSizeLimit + "&mimetype=application/vnd.ms-fontobject" },
+                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/vnd.ms-fontobject" },
 
                 { test: /\.ttf(\?[a-z0-9\.#]+)?$/i,
-                  loader: "url?limit=" + appConfig.inlineFileSizeLimit + "&mimetype=application/octet-stream" },
+                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/octet-stream" },
 
                 { test: /\.woff(\?[a-z0-9\.#]+)?$/i,
-                  loader: "url?limit=" + appConfig.inlineFileSizeLimit + "&mimetype=application/font-woff" },
+                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/font-woff" },
 
                 { test: /\.woff2(\?[a-z0-9\.#]+)?$/i,
-                  loader: "url?limit=" + appConfig.inlineFileSizeLimit + "&mimetype=application/font-woff2" },
+                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/font-woff2" },
 
                 { test: /\.svg(\?[a-z0-9\.#]+)?$/i,
-                  loader: "url?limit=" + appConfig.inlineFileSizeLimit + "&mimetype=image/svg+xml" },
+                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=image/svg+xml" },
 
                 { test: /\.modernizrrc$/, loader: "modernizr" }
             ]
@@ -205,7 +208,7 @@ export function configure(
                                 .replace(/<link\s+href=(["'])(.+?)bundle\.css\1/i, "<link href=$1$2" + mainCssFileName + "$1");
 
                             FileSystem.writeFileSync(
-                                Path.resolve(".", appConfig.buildSubpath, htmlFileName),
+                                Path.resolve(".", buildSubpath, htmlFileName),
                                 htmlOutput);
                         }
                     });
@@ -215,7 +218,7 @@ export function configure(
                 new Webpack.DefinePlugin(defs),
                 new Webpack.optimize.OccurenceOrderPlugin(true),
                 new Webpack.NormalModuleReplacementPlugin(/modernizr$/i, "node-noop"),
-                new ExtractTextPlugin(Path.join(appConfig.staticSubpath, "bundle.css"), { allChunks: true })
+                new ExtractTextPlugin(Path.join(staticSubpath, "bundle.css"), { allChunks: true })
             ]
         }),
 
