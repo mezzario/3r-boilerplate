@@ -24,9 +24,10 @@ const app = Express();
 app.use(Compression());
 
 if (__DEVELOPMENT__) {
-    const webpack = require("webpack");
-    const webpackConfig = WebpackConfigurator.configure("client", "development");
-    const webpackCompiler = webpack(webpackConfig);
+    const Webpack = require("webpack");
+
+    let webpackConfig = WebpackConfigurator.configure("client", "development");
+    let webpackCompiler = Webpack(webpackConfig);
 
     app.use(require("webpack-dev-middleware")(webpackCompiler, {
         publicPath: webpackConfig.output.publicPath,

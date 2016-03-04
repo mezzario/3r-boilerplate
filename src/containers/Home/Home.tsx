@@ -14,6 +14,7 @@ import * as Components from "../../components";
 const { spring, presets, TransitionMotion } = require("react-motion");
 const Modernizr = require("modernizr") as __Modernizr.ModernizrStatic;
 import AppHistory from "../../core/History";
+const _ = { debounce: require("lodash.debounce") } as _.LoDashStatic;
 
 interface HomeProps extends /*React.Props<Home>, */ReactRouter.RouteComponentProps<{}, {}> {
     todosView: TodosView;
@@ -29,10 +30,21 @@ interface HomeProps extends /*React.Props<Home>, */ReactRouter.RouteComponentPro
 }
 
 interface HomeState {
+    filterTodosByText?: string;
+    filteredTodos?: TodoItem[];
 }
 
 class Home extends React.Component<HomeProps, HomeState> {
     private _todoList: Components.TodoList;
+
+    constructor(props: HomeProps) {
+        super(props);
+
+        this.state = {
+            filterTodosByText: "",
+            filteredTodos: props.todos
+        };
+    }
 
     componentDidMount() {
         // this.props.addTodo(
@@ -51,6 +63,10 @@ class Home extends React.Component<HomeProps, HomeState> {
         return shouldPureComponentUpdate.apply(this, Array.prototype.slice.call(arguments));
     }
 
+    componentWillReceiveProps(nextProps: HomeProps) {
+        this.filterTodos(undefined, nextProps.todos, true);
+    }
+
     private handleNewTodoKeyDown(e: React.KeyboardEvent) {
         let input = e.target as HTMLInputElement;
         let text = input.value.trim();
@@ -63,6 +79,35 @@ class Home extends React.Component<HomeProps, HomeState> {
 
             input.value = "";
         }
+    }
+
+    private filterTodos(
+        byText = this.state.filterTodosByText,
+        todos = this.props.todos,
+        force = false
+    ) {
+        byText = (byText || "").trim().toLocaleLowerCase();
+
+        let filteredTodos = this.state.filteredTodos;
+
+        if (!byText)
+            filteredTodos = todos;
+        else if (force || byText !== this.state.filterTodosByText) {
+            let parts = byText.split(/\s+/);
+
+            filteredTodos = todos.filter(todo => {
+                let todoText = todo.text.toLocaleLowerCase().trim();
+                return parts.every(part => todoText.indexOf(part) >= 0);
+            });
+        }
+
+        this.setState({ filterTodosByText: byText, filteredTodos });
+    }
+
+    private filterTodosDebounced = (() => _.debounce(this.filterTodos, 400))();
+
+    private handleNewTodoChange(e: React.FormEvent) {
+        this.filterTodosDebounced((e.target as HTMLInputElement).value);
     }
 
     private handleClearCompletedClick(e: React.MouseEvent) {
@@ -106,6 +151,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                             autoFocus={true}
                             placeholder="What needs to be done?"
                             onKeyDown={this.handleNewTodoKeyDown.bind(this)}
+                            onChange={this.handleNewTodoChange.bind(this)}
                         />
                     </div>
                 </div>
@@ -122,8 +168,11 @@ class Home extends React.Component<HomeProps, HomeState> {
                             <div key={key} style={style}>{
                                 <Components.TodoList
                                     ref={ref => this._todoList = ref}
-                                    todos={this.props.todos}
-                                    emptyMessage="no items in this view"
+                                    todos={this.state.filteredTodos}
+                                    emptyMessage={() =>
+                                        this.state.filteredTodos.length === this.props.todos.length
+                                            ? "no items in this view"
+                                            : "no items found that satisfy the query"}
                                     deleteTodo={this.props.deleteTodo}
                                     editTodoText={this.props.editTodoText}
                                     setTodoCompletion={this.props.setTodoCompletion}
@@ -199,6 +248,6 @@ export default ReactRedux.connect(
         deleteTodo: Action.deleteTodo,
         editTodoText: Action.editTodoText,
         setTodoCompletion: Action.setTodoCompletion,
-        clearCompletedTodos: Action.clearCompletedTodos,
+        clearCompletedTodos: Action.clearCompletedTodos
     }, dispatch)
 )(Home);

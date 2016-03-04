@@ -15,14 +15,15 @@ export default ReduxActions.handleActions({
 
     [Action.EditTodoText]: (state, action) =>
         state.map(todo => todo.id === action.payload.id
-            ? Object.assign({}, todo, { text: (action.payload as TodoItem).text })
+            ? Object.assign({}, todo, { text: action.payload.text })
             : todo),
 
     [Action.SetTodoCompletion]: (state, action) =>
         state.map(todo => todo.id === action.payload.id
-            ? Object.assign({}, todo, { completed: (action.payload as TodoItem).completed })
+            ? Object.assign({}, todo, { completed: action.payload.completed })
             : todo),
 
     [Action.ClearCompletedTodos]: (state, action) =>
-        state.filter(todo => !todo.completed),
-}, []);
+        state.filter(todo => !todo.completed)
+
+}, [] as TodoItem[]);

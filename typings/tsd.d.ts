@@ -23,6 +23,7 @@
 /// <reference path="serve-static/serve-static.d.ts" />
 /// <reference path="cheerio/cheerio.d.ts" />
 /// <reference path="compression/compression.d.ts" />
+/// <reference path="lodash/lodash.d.ts" />
 // <reference path="core-js/core-js.d.ts" />
 
 declare var __CLIENT__: boolean;

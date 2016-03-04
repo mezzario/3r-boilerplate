@@ -11,7 +11,7 @@ const { spring, presets, TransitionMotion } = require("react-motion");
 
 interface TodoListProps extends React.Props<TodoList> {
     todos: TodoItem[];
-    emptyMessage?: string;
+    emptyMessage?: string | (() => string);
     header?: React.ReactNode;
     footer?: React.ReactNode;
 
@@ -22,7 +22,6 @@ interface TodoListProps extends React.Props<TodoList> {
 
 interface TodoListState {
     editedTodoId?: number;
-    emptyMessage?: string;
 }
 
 export default class TodoList extends React.Component<TodoListProps, TodoListState> {
@@ -31,9 +30,7 @@ export default class TodoList extends React.Component<TodoListProps, TodoListSta
     constructor(props: TodoListProps) {
         super(props);
 
-        this.state = {
-            emptyMessage: this.props.emptyMessage || "empty"
-        };
+        this.state = {};
     }
 
     shouldComponentUpdate(nextProps: TodoListProps, nextState: TodoListState, nextContext) {
@@ -85,7 +82,11 @@ export default class TodoList extends React.Component<TodoListProps, TodoListSta
                                     setTodoCompletion={this.props.setTodoCompletion}
                                 />
                                 : <div key={key} style={style} className={classNames("ui attached segment", Styles.emptyMessage)}>
-                                    <div>{this.state.emptyMessage}</div>
+                                    <div>{this.props.emptyMessage
+                                        ? (typeof this.props.emptyMessage === "string"
+                                            ? this.props.emptyMessage
+                                            : (this.props.emptyMessage as any)())
+                                        : "empty"}</div>
                                 </div>)}
 
                         {this.props.footer}

@@ -79,6 +79,9 @@
         },
         "compression/compression.d.ts": {
             "commit": "945ebfe049964e429c2530971b9081f3c0f611df"
+        },
+        "lodash/lodash.d.ts": {
+            "commit": "931ce4dea43bd9a4ca6be0612dacd255458e93ec"
         }
     }
 }

@@ -25,11 +25,11 @@ export function configure(
     const lessLoaders = cssLoaders.concat("less");
 
     const defs = {
+        "process.env.NODE_ENV": `"${nodeEnv}"`,
         __CLIENT__: appTarget === "client",
         __SERVER__: appTarget === "server",
         __DEVELOPMENT__: nodeEnv === "development",
-        __PRODUCTION__: nodeEnv === "production",
-        "process.env.NODE_ENV": `"${nodeEnv}"`
+        __PRODUCTION__: nodeEnv === "production"
     };
 
     const babelOptions = {
@@ -65,10 +65,7 @@ export function configure(
             "server:*": "node"
         }),
 
-        devtool: choose({
-            "client:production": "source-map",
-            "*": "hidden-source-map"
-        }),
+        devtool: "source-map",
 
         progress: true,
 
