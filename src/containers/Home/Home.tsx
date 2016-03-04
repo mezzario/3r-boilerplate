@@ -166,8 +166,9 @@ export default ReactRedux.connect(
         let todosView: TodosView;
         let todos: TodoItem[];
         let activeTodos = state.todos.filter(todo => !todo.completed);
+        let location = (state.routing as any).locationBeforeTransitions as HistoryModule.Location;
 
-        switch (state.router.location.pathname.toLowerCase()) {
+        switch (location.pathname.toLowerCase()) {
             case "/active":
                 todosView = TodosView.Active;
                 todos = activeTodos;

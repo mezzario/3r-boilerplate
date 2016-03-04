@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "ES6",
         "jsx": "react",
-        "sourceMap": true,
+        "sourceMap": false,
         "moduleResolution": "node",
         "removeComments": false,
         "noEmit": true,

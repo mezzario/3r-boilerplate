@@ -6,3 +6,6 @@ node_modules
 .DS_Store
 .ntvs_analysis.dat
 npm-debug.log
+/src/server.js
+/src/server.js.map
+/src/static

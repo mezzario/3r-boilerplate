@@ -18,7 +18,7 @@
             "commit": "81a7f48ea554e1baf810af905d8bd9e4eb3b4e69"
         },
         "node/node.d.ts": {
-            "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+            "commit": "945ebfe049964e429c2530971b9081f3c0f611df"
         },
         "classnames/classnames.d.ts": {
             "commit": "b2d17b5dad042e293e77d09f2a30d281325cb606"
@@ -44,15 +44,6 @@
         "redux-logger/redux-logger.d.ts": {
             "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
         },
-        "redux-devtools/redux-devtools.d.ts": {
-            "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
-        },
-        "redux-devtools-log-monitor/redux-devtools-log-monitor.d.ts": {
-            "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
-        },
-        "redux-devtools-dock-monitor/redux-devtools-dock-monitor.d.ts": {
-            "commit": "5d0f2126c8dac8fce0ff020218aea06607213b0d"
-        },
         "whatwg-fetch/whatwg-fetch.d.ts": {
             "commit": "3d2f9971a107e2eee2de3ec5318f5c54071e16ed"
         },
@@ -73,6 +64,21 @@
         },
         "source-map/source-map.d.ts": {
             "commit": "bcd5761826eb567876c197ccc6a87c4d05731054"
+        },
+        "serve-static/serve-static.d.ts": {
+            "commit": "945ebfe049964e429c2530971b9081f3c0f611df"
+        },
+        "mime/mime.d.ts": {
+            "commit": "945ebfe049964e429c2530971b9081f3c0f611df"
+        },
+        "express/express.d.ts": {
+            "commit": "945ebfe049964e429c2530971b9081f3c0f611df"
+        },
+        "cheerio/cheerio.d.ts": {
+            "commit": "4ba57e605bd71bf7248de65aac0b4f50e3eb1c9e"
+        },
+        "compression/compression.d.ts": {
+            "commit": "945ebfe049964e429c2530971b9081f3c0f611df"
         }
     }
 }

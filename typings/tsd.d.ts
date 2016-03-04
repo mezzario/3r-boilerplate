@@ -18,8 +18,14 @@
 /// <reference path="source-map/source-map.d.ts" />
 /// <reference path="uglify-js/uglify-js.d.ts" />
 /// <reference path="webpack/webpack.d.ts" />
+/// <reference path="express/express.d.ts" />
+/// <reference path="mime/mime.d.ts" />
+/// <reference path="serve-static/serve-static.d.ts" />
+/// <reference path="cheerio/cheerio.d.ts" />
+/// <reference path="compression/compression.d.ts" />
 // <reference path="core-js/core-js.d.ts" />
 
 declare var __CLIENT__: boolean;
 declare var __SERVER__: boolean;
 declare var __DEVELOPMENT__: boolean;
+declare var __PRODUCTION__: boolean;
