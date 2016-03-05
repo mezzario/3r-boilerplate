@@ -72,10 +72,10 @@ export function configure(
         entry: choose({
             "client:development": [
                 "webpack-hot-middleware/client",
-                Path.resolve("src/core/app")
+                Path.resolve("src/client")
             ],
             "client:production": [
-                Path.resolve("src/core/app")
+                Path.resolve("src/client")
             ],
             "server:*": [
                 Path.resolve("src/server.js")

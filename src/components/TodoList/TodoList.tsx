@@ -58,40 +58,38 @@ export default class TodoList extends React.Component<TodoListProps, TodoListSta
         let defaultConfigs = getConfigs(enterStyle);
         let configs = getConfigs(usualStyle);
 
-        return (
-            <TransitionMotion
-                defaultStyles={defaultConfigs}
-                styles={configs}
-                willEnter={() => enterStyle}
-                willLeave={() => Object.assign({}, leaveStyle, { "borderBottom": 0 })}>
+        return <TransitionMotion
+            defaultStyles={defaultConfigs}
+            styles={configs}
+            willEnter={() => enterStyle}
+            willLeave={() => Object.assign({}, leaveStyle, { "borderBottom": 0 })}>
 
-                {(configs: { key: string, data: TodoItem, style }[]) =>
-                    <div className={Styles.root}>
-                        {this.props.header}
+            {(configs: { key: string, data: TodoItem, style }[]) =>
+                <div className={Styles.root}>
+                    {this.props.header}
 
-                        {configs.map(({ key, data: todo, style }) =>
-                            todo.id
-                                ? <Components.TodoListItem
-                                    key={key}
-                                    todo={todo}
-                                    style={style}
-                                    ref={ref => this._itemComps[key] = ref}
-                                    onBeforeEdit={() => this.cancelEdit()}
-                                    deleteTodo={this.props.deleteTodo}
-                                    editTodoText={this.props.editTodoText}
-                                    setTodoCompletion={this.props.setTodoCompletion}
-                                />
-                                : <div key={key} style={style} className={classNames("ui attached segment", Styles.emptyMessage)}>
-                                    <div>{this.props.emptyMessage
-                                        ? (typeof this.props.emptyMessage === "string"
-                                            ? this.props.emptyMessage
-                                            : (this.props.emptyMessage as any)())
-                                        : "empty"}</div>
-                                </div>)}
+                    {configs.map(({ key, data: todo, style }) =>
+                        todo.id
+                            ? <Components.TodoListItem
+                                key={key}
+                                todo={todo}
+                                style={style}
+                                ref={ref => this._itemComps[key] = ref}
+                                onBeforeEdit={() => this.cancelEdit()}
+                                deleteTodo={this.props.deleteTodo}
+                                editTodoText={this.props.editTodoText}
+                                setTodoCompletion={this.props.setTodoCompletion}
+                            />
+                            : <div key={key} style={style} className={classNames("ui attached segment", Styles.emptyMessage)}>
+                                <div>{this.props.emptyMessage
+                                    ? (typeof this.props.emptyMessage === "string"
+                                        ? this.props.emptyMessage
+                                        : (this.props.emptyMessage as any)())
+                                    : "empty"}</div>
+                            </div>)}
 
-                        {this.props.footer}
-                    </div>}
-            </TransitionMotion>
-        );
+                    {this.props.footer}
+                </div>}
+        </TransitionMotion>
     }
 }

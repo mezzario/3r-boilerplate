@@ -71,36 +71,34 @@ export default class TodoListItem extends React.Component<TodoListItemProps, Tod
         let { todo } = this.props;
         let { editMode } = this.state;
 
-        return (
-            <div className={classNames("ui attached segment", Styles.root, { "completed": todo.completed, "edit": editMode })}
-                style={Object.assign({}, this.props.style)}
-                onDoubleClick={e => this.setEditMode(true)}>
+        return <div className={classNames("ui attached segment", Styles.root, { "completed": todo.completed, "edit": editMode })}
+            style={Object.assign({}, this.props.style)}
+            onDoubleClick={e => this.setEditMode(true)}>
 
-                <div className="checkbox-wrapper">
-                    <div className={classNames("ui slider checkbox", { checked: !todo.completed })}
-                        onClick={() => this.props.setTodoCompletion({ id: todo.id, completed: !todo.completed })}>
+            <div className="checkbox-wrapper">
+                <div className={classNames("ui slider checkbox", { checked: !todo.completed })}
+                    onClick={() => this.props.setTodoCompletion({ id: todo.id, completed: !todo.completed })}>
 
-                        <input type="checkbox" checked={!todo.completed} readOnly={true} disabled={editMode} />
-                        <label>{!editMode ? <span>{todo.text}</span> : <span>&nbsp;</span>}</label>
-                    </div>
+                    <input type="checkbox" checked={!todo.completed} readOnly={true} disabled={editMode} />
+                    <label>{!editMode ? <span>{todo.text}</span> : <span>&nbsp;</span>}</label>
                 </div>
-
-                {!editMode && <i className="icon-edit inline-button edit" onClick={e => this.setEditMode(true)} />}
-                {!editMode && <i className="icon-bin inline-button delete" onClick={e => this.props.deleteTodo(todo.id)} />}
-
-                {editMode &&
-                    <div className="ui form text-editor">
-                        <div className="field">
-                            <input type="text"
-                                ref={this.handleTextInputRefUpdate.bind(this)}
-                                defaultValue={todo.text}
-                                onKeyDown={this.handleTextInputKeyDown.bind(this)} />
-                        </div>
-                    </div>}
-
-                {editMode && <i className="icon-checkmark inline-button save" onClick={e => this.saveTodoText(this._textInput.value)} />}
-                {editMode && <i className="icon-cancel inline-button cancel" onClick={e => this.setEditMode(false)} />}
             </div>
-        );
+
+            {!editMode && <i className="icon-edit inline-button edit" onClick={e => this.setEditMode(true)} />}
+            {!editMode && <i className="icon-bin inline-button delete" onClick={e => this.props.deleteTodo(todo.id)} />}
+
+            {editMode &&
+                <div className="ui form text-editor">
+                    <div className="field">
+                        <input type="text"
+                            ref={this.handleTextInputRefUpdate.bind(this)}
+                            defaultValue={todo.text}
+                            onKeyDown={this.handleTextInputKeyDown.bind(this)} />
+                    </div>
+                </div>}
+
+            {editMode && <i className="icon-checkmark inline-button save" onClick={e => this.saveTodoText(this._textInput.value)} />}
+            {editMode && <i className="icon-cancel inline-button cancel" onClick={e => this.setEditMode(false)} />}
+        </div>
     }
 }

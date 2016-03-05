@@ -1,0 +1,27 @@
+@import "../../content/globals";
+
+:local(.root) {
+    position: relative;
+    height: @gFooterHeight;
+
+    > .holder {
+        text-align: center;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding-bottom: .2em;
+
+        > .block {
+            display: inline-block;
+            margin: 0 .6em;
+        }
+
+        .credit {
+            color: @gInactiveColor;
+            font-size: .8em;
+            position: relative;
+            top: -.4em;
+        }
+    }
+}

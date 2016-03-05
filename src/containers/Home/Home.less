@@ -1,6 +1,12 @@
 @import "../../content/globals";
 
 :local(.root) {
+    margin: 0 !important;
+    height: 100%;
+
+    > .column {
+        max-width: 600px;
+    }
 }
 
 :local(.mainHeader) {
@@ -13,12 +19,6 @@
         top: .15em;
         left: .05em;
     }
-}
-
-:local(.mainHeaderButtons) {
-    position: absolute;
-    top: 1.4rem;
-    right: 1rem;
 }
 
 :local(.newTodoInput) {

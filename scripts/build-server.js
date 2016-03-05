@@ -6,7 +6,7 @@ const Webpack = require("webpack");
 const BuildUtils = require("./build-utils");
 const Chalk = require("chalk");
 
-BuildUtils.transpileTsFile("src/server.ts", "src/server.js");
+BuildUtils.transpileTsFile("src/server.tsx", "src/server.js");
 
 let webpackConfigure = eval(BuildUtils.transpileTsFile("src/configs/WebpackConfigurator.ts"));
 let webpackConfig = webpackConfigure("server");

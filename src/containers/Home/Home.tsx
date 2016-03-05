@@ -10,6 +10,7 @@ const Styles = require("./Home.less");
 import { TodoItem, TodosView } from "../../core/Todos";
 import { AppStore } from "../../core/Store";
 import * as Action from "../../core/Actions";
+import * as Containers from "../../containers";
 import * as Components from "../../components";
 const { spring, presets, TransitionMotion } = require("react-motion");
 const Modernizr = require("modernizr") as __Modernizr.ModernizrStatic;
@@ -78,6 +79,8 @@ class Home extends React.Component<HomeProps, HomeState> {
                 AppHistory.push("/");
 
             input.value = "";
+
+            this.filterTodosDebounced("");
         }
     }
 
@@ -86,20 +89,21 @@ class Home extends React.Component<HomeProps, HomeState> {
         todos = this.props.todos,
         force = false
     ) {
-        byText = (byText || "").trim().toLocaleLowerCase();
+        byText = (byText || "").trim().toLocaleLowerCase().replace(/\s+/g, " ");
 
         let filteredTodos = this.state.filteredTodos;
 
-        if (!byText)
-            filteredTodos = todos;
-        else if (force || byText !== this.state.filterTodosByText) {
-            let parts = byText.split(/\s+/);
+        if (force || byText !== this.state.filterTodosByText)
+            if (!byText)
+                filteredTodos = todos;
+            else {
+                let parts = byText.split(" ");
 
-            filteredTodos = todos.filter(todo => {
-                let todoText = todo.text.toLocaleLowerCase().trim();
-                return parts.every(part => todoText.indexOf(part) >= 0);
-            });
-        }
+                filteredTodos = todos.filter(todo => {
+                    let todoText = todo.text.toLocaleLowerCase().trim();
+                    return parts.every(part => todoText.indexOf(part) >= 0);
+                });
+            }
 
         this.setState({ filterTodosByText: byText, filteredTodos });
     }
@@ -126,86 +130,76 @@ class Home extends React.Component<HomeProps, HomeState> {
         let defaultConfigs = getConfigs(enterStyle);
         let configs = getConfigs(usualStyle);
 
-        return (
-            <div className={Styles.root}>
-                <h2 className={classNames("ui header orange", Styles.mainHeader)}><i className="icon-checklist" /> todos</h2>
+        return <Containers.ContentPage withHeader={false}>
+            <div className={classNames("ui stackable centered grid", Styles.root)}>
+                <div className="column">
+                    <h2 className={classNames("ui header orange", Styles.mainHeader)}><i className="icon-checklist" /> todos</h2>
 
-                <div className={Styles.mainHeaderButtons}>
-                    <div className="button">
-                        <a className="github-button"
-                            style={{display: "none"}}
-                            href="https://github.com/mezzario/typescript-redux-boilerplate"
-                            data-count-href="/mezzario/typescript-redux-boilerplate/stargazers"
-                            data-count-api="/repos/mezzario/typescript-redux-boilerplate#stargazers_count"
-                            data-count-aria-label="# stargazers on GitHub"
-                            aria-label="Star typescript-redux-boilerplate on GitHub">Star</a>
+                    <div className="ui form">
+                        <div className="field">
+                            <input
+                                ref={(input: HTMLInputElement) => !Modernizr.touchevents && input && input.focus()}
+                                className={Styles.newTodoInput}
+                                type="text"
+                                autoFocus={true}
+                                placeholder="What needs to be done?"
+                                onKeyDown={this.handleNewTodoKeyDown.bind(this)}
+                                onChange={this.handleNewTodoChange.bind(this)}
+                            />
+                        </div>
                     </div>
+
+                    {/*animate show/hide of todo list*/}
+                    <TransitionMotion
+                        defaultStyles={defaultConfigs}
+                        styles={configs}
+                        willEnter={() => enterStyle}
+                        willLeave={() => leaveStyle}>
+
+                        {(configs: { key: string, data: TodoItem, style }[]) =>
+                            <div>{configs.map(({ key, style }) =>
+                                <div key={key} style={style}>{
+                                    <Components.TodoList
+                                        ref={ref => this._todoList = ref}
+                                        todos={this.state.filteredTodos}
+                                        emptyMessage={() =>
+                                            this.state.filteredTodos.length === this.props.todos.length
+                                                ? "no items in this view"
+                                                : "no items found that satisfy the query"}
+                                        deleteTodo={this.props.deleteTodo}
+                                        editTodoText={this.props.editTodoText}
+                                        setTodoCompletion={this.props.setTodoCompletion}
+                                        header={
+                                            <div className={classNames("ui top attached three basic buttons", Styles.viewSelector)}>
+                                                {[ [TodosView.All, "All", "/"],
+                                                   [TodosView.Active, "Active", "/active"],
+                                                   [TodosView.Completed, "Completed", "/completed"] ]
+                                                .map(pair =>
+                                                    <ReactRouter.Link
+                                                        key={pair[0]}
+                                                        className={classNames("ui button", { "active": this.props.todosView === pair[0] })}
+                                                        to={pair[2] as any}
+                                                        onClick={() => { this._todoList.cancelEdit(); }}
+                                                    >{pair[1]}</ReactRouter.Link>)}
+                                            </div>
+                                        }
+                                        footer={
+                                            <div className={classNames("ui bottom attached secondary segment", Styles.statusBar)}>
+                                                {!this.props.todosLeft
+                                                    ? <span><i className="icon-done_all" />All done</span>
+                                                    : (this.props.todosLeft !== this.props.todosTotal ? `${this.props.todosLeft} of ` : "") + `${this.props.todosTotal} item${this.props.todosTotal > 1 ? "s" : ""} left`}
+
+                                                {this.props.todosLeft !== this.props.todosTotal &&
+                                                    <a href="#" onClick={this.handleClearCompletedClick.bind(this)}><i className="icon-bin" /><span>Clear Completed</span></a>}
+                                            </div>
+                                        }
+                                    />
+                                }</div>
+                            )}</div>}
+                    </TransitionMotion>
                 </div>
-
-                <div className="ui form">
-                    <div className="field">
-                        <input
-                            ref={(input: HTMLInputElement) => !Modernizr.touchevents && input && input.focus()}
-                            className={Styles.newTodoInput}
-                            type="text"
-                            autoFocus={true}
-                            placeholder="What needs to be done?"
-                            onKeyDown={this.handleNewTodoKeyDown.bind(this)}
-                            onChange={this.handleNewTodoChange.bind(this)}
-                        />
-                    </div>
-                </div>
-
-                {/*animate show/hide of todo list*/}
-                <TransitionMotion
-                    defaultStyles={defaultConfigs}
-                    styles={configs}
-                    willEnter={() => enterStyle}
-                    willLeave={() => leaveStyle}>
-
-                    {(configs: { key: string, data: TodoItem, style }[]) =>
-                        <div>{configs.map(({ key, style }) =>
-                            <div key={key} style={style}>{
-                                <Components.TodoList
-                                    ref={ref => this._todoList = ref}
-                                    todos={this.state.filteredTodos}
-                                    emptyMessage={() =>
-                                        this.state.filteredTodos.length === this.props.todos.length
-                                            ? "no items in this view"
-                                            : "no items found that satisfy the query"}
-                                    deleteTodo={this.props.deleteTodo}
-                                    editTodoText={this.props.editTodoText}
-                                    setTodoCompletion={this.props.setTodoCompletion}
-                                    header={
-                                        <div className={classNames("ui top attached three basic buttons", Styles.viewSelector)}>
-                                            {[ [TodosView.All, "All", "/"],
-                                               [TodosView.Active, "Active", "/active"],
-                                               [TodosView.Completed, "Completed", "/completed"] ]
-                                            .map(pair =>
-                                                <ReactRouter.Link
-                                                    key={pair[0]}
-                                                    className={classNames("ui button", { "active": this.props.todosView === pair[0] })}
-                                                    to={pair[2] as any}
-                                                    onClick={() => { this._todoList.cancelEdit(); }}
-                                                >{pair[1]}</ReactRouter.Link>)}
-                                        </div>
-                                    }
-                                    footer={
-                                        <div className={classNames("ui bottom attached secondary segment", Styles.statusBar)}>
-                                            {!this.props.todosLeft
-                                                ? <span><i className="icon-done_all" />All done</span>
-                                                : (this.props.todosLeft !== this.props.todosTotal ? `${this.props.todosLeft} of ` : "") + `${this.props.todosTotal} item${this.props.todosTotal > 1 ? "s" : ""} left`}
-
-                                            {this.props.todosLeft !== this.props.todosTotal &&
-                                                <a href="#" onClick={this.handleClearCompletedClick.bind(this)}><i className="icon-bin" /><span>Clear Completed</span></a>}
-                                        </div>
-                                    }
-                                />
-                            }</div>
-                        )}</div>}
-                </TransitionMotion>
             </div>
-        );
+        </Containers.ContentPage>
     }
 }
 

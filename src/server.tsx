@@ -4,6 +4,7 @@ import * as React from "react"; React;
 import * as ReactDOMServer from "react-dom/server";
 import * as ReactRedux from "react-redux";
 import * as ReactRouter from "react-router";
+const RouterContext = ReactRouter.RouterContext as any;
 import * as ReduxRouter from "react-router-redux";
 import Routes from "./core/Routes";
 import * as AppStore from "./core/Store";
@@ -15,6 +16,7 @@ const ServeFavicon = require("serve-favicon");
 const Cheerio = require("cheerio") as CheerioAPI;
 const Chalk = require("chalk");
 import AppConfig from "./configs/AppConfig";
+const DocumentTitle = require("react-document-title");
 
 const appPort = __DEVELOPMENT__ ? AppConfig.server.devPort : AppConfig.server.prodPort;
 const appStore = AppStore.configure();
@@ -55,12 +57,15 @@ else {
                 else if (redirectLocation)
                     res.redirect(302, redirectLocation.pathname + redirectLocation.search);
                 else if (renderProps) {
-                    let routerContext = React.createElement(ReactRouter.RouterContext, Object.assign({}, renderProps) as any);
-                    let provider = React.createElement(ReactRedux.Provider, { store: appStore } as any, routerContext);
-                    let html = FileSystem.readFileSync("index.html", "utf8");
-                    let contentHtml = ReactDOMServer.renderToString(provider);
+                    let contentHtml = ReactDOMServer.renderToString(
+                        <ReactRedux.Provider store={appStore}>
+                            <RouterContext {...renderProps} />
+                        </ReactRedux.Provider>
+                    );
 
+                    let html = FileSystem.readFileSync("index.html", "utf8");
                     let $ = Cheerio.load(html);
+                    $("title").text(DocumentTitle.rewind());
                     $("#root").empty().append(contentHtml);
                     html = $.html();
 
