@@ -6539,7 +6539,7 @@
 	    _classCallCheck(this, AppConfig);
 	
 	    // set true to render pages on server
-	    this.universal = true;
+	    this.universal = false;
 	    this.server = {
 	        devPort: 3000,
 	        prodPort: 3005
