@@ -10,7 +10,7 @@ import * as AppStore from "./core/Store";
 import AppHistory from "./core/History";
 import * as FastClick from "fastclick";
 
-const appStore = AppStore.configure();
+const appStore = AppStore.configure(window.__INITIAL_STATE__);
 const appHistory = (ReduxRouter as any).syncHistoryWithStore(AppHistory, appStore);
 
 ReactDOM.render(

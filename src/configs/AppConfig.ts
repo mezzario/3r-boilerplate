@@ -1,4 +1,6 @@
 export class AppConfig {
+    title = "Todo";
+
     // set true to render pages on server
     universal = true;
 

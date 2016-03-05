@@ -18,9 +18,19 @@ const Chalk = require("chalk");
 import AppConfig from "./configs/AppConfig";
 const DocumentTitle = require("react-document-title");
 
-const appPort = __DEVELOPMENT__ ? AppConfig.server.devPort : AppConfig.server.prodPort;
-const appStore = AppStore.configure();
+const appStore = AppStore.configure(
+    // { // initial test data
+    //     todos: [
+    //         { id: 1, text: "Watch movie from favorites", completed: false },
+    //         { id: 2, text: "Call Alice tomorrow afternoon", completed: true },
+    //         { id: 3, text: "Buy gifts for colleagues", completed: false },
+    //         { id: 4, text: "Apply for a new job", completed: false }
+    //     ]
+    // }
+);
+
 const appHistory = (ReduxRouter as any).syncHistoryWithStore(AppHistory, appStore);
+const appPort = __DEVELOPMENT__ ? AppConfig.server.devPort : AppConfig.server.prodPort;
 const app = Express();
 
 app.use(Compression());
@@ -66,6 +76,7 @@ else {
                     let html = FileSystem.readFileSync("index.html", "utf8");
                     let $ = Cheerio.load(html);
                     $("title").text(DocumentTitle.rewind());
+                    $("head").append(`<script>window.__INITIAL_STATE__ = ${JSON.stringify(appStore.getState())};</script>`)
                     $("#root").empty().append(contentHtml);
                     html = $.html();
 

@@ -6,7 +6,7 @@ const classNames = require("classnames") as ClassNamesFn;
 const Styles = require("./TodoList.less");
 import { TodoItem } from "../../core/Todos";
 import * as Action from "../../core/Actions";
-import * as Components from "../../components";
+import { TodoListItem } from "../../components";
 const { spring, presets, TransitionMotion } = require("react-motion");
 
 interface TodoListProps extends React.Props<TodoList> {
@@ -24,8 +24,10 @@ interface TodoListState {
     editedTodoId?: number;
 }
 
+let _firstRender = true;
+
 export default class TodoList extends React.Component<TodoListProps, TodoListState> {
-    private _itemComps: { [id: string]: Components.TodoListItem } = {};
+    private _itemComps: { [id: string]: TodoListItem } = {};
 
     constructor(props: TodoListProps) {
         super(props);
@@ -46,13 +48,22 @@ export default class TodoList extends React.Component<TodoListProps, TodoListSta
     }
 
     render() {
+        let anim = !_firstRender && !__SERVER__;
+        _firstRender = false;
+
         const todos = this.props.todos.length ? this.props.todos : [{ id: 0 } as TodoItem];
         const preset = { stiffness: 300, damping: 30 };
         const itemHeight = 46;
 
+        let fixedStyle = { "opacity": 1,                 "height": itemHeight                 };
         let enterStyle = { "opacity": 0,                 "height": 0                          };
         let usualStyle = { "opacity": spring(1),         "height": spring(itemHeight, preset) };
         let leaveStyle = { "opacity": spring(0, preset), "height": spring(0, preset)          };
+
+        if (!anim) {
+            enterStyle = fixedStyle;
+            usualStyle = fixedStyle;
+        }
 
         let getConfigs = style => todos.map(todo => ({ key: String(todo.id), data: todo, style }));
         let defaultConfigs = getConfigs(enterStyle);
@@ -70,7 +81,7 @@ export default class TodoList extends React.Component<TodoListProps, TodoListSta
 
                     {configs.map(({ key, data: todo, style }) =>
                         todo.id
-                            ? <Components.TodoListItem
+                            ? <TodoListItem
                                 key={key}
                                 todo={todo}
                                 style={style}

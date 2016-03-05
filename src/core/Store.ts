@@ -6,9 +6,9 @@ import { ReduxLoggerOptions } from "redux-logger";
 import * as Reducers from "../reducers";
 import { TodoItem, TodosView } from "./Todos";
 
-export interface AppStore {
-    todos: TodoItem[];
-    routing: ReactRouter.RouterState;
+export interface AppState {
+    todos?: TodoItem[];
+    routing?: ReactRouter.RouterState;
 }
 
 function createReducer(reducers) {
@@ -19,7 +19,7 @@ function createReducer(reducers) {
     return reducer;
 }
 
-export function configure() {
+export function configure(initialState?: AppState) {
     let reducer = createReducer(Reducers);
     let middlewares = [ReduxThunk, ReduxPromise];
 
@@ -33,9 +33,10 @@ export function configure() {
         Redux.applyMiddleware(...middlewares),
         // please install https://github.com/zalmoxisus/redux-devtools-extension
         // chrome extension to use redux dev tools (open Redux tab in Chrome Developer Tools)
-        typeof window !== "undefined" && (window as any).devToolsExtension ? (window as any).devToolsExtension() : f => f);
+        typeof window !== "undefined" && (window as any).devToolsExtension
+            ? (window as any).devToolsExtension() : f => f);
 
-    let store = enhancer(Redux.createStore)(reducer);
+    let store: Redux.Store = enhancer(Redux.createStore)(reducer, initialState);
 
     if (__CLIENT__ && __DEVELOPMENT__ && (module as any).hot)
         (module as any).hot.accept("../reducers", () => {

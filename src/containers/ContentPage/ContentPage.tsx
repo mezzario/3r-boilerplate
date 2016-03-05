@@ -1,7 +1,7 @@
 /// <reference path="../../../typings/tsd.d.ts" />
 
 import * as React from "react";
-import * as Components from "../../components";
+import { PageHeader, PageFooter } from "../../components";
 var classNames = require("classnames") as ClassNamesFn;
 var Styles = require("./ContentPage.less");
 
@@ -31,11 +31,11 @@ export default class ContentPage extends React.Component<ContentPageProps, Conte
             "with-footer": this.state.withFooter
         })}>
             <div className="content-wrapper">
-                {this.state.withHeader && <Components.PageHeader />}
+                {this.state.withHeader && <PageHeader />}
                 {this.props.children}
             </div>
 
-            {this.state.withFooter && <Components.PageFooter />}
+            {this.state.withFooter && <PageFooter />}
         </div>
     }
 }

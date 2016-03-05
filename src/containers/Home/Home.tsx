@@ -8,10 +8,10 @@ const shouldPureComponentUpdate = require("react-pure-render/function") as Funct
 const classNames = require("classnames") as ClassNamesFn;
 const Styles = require("./Home.less");
 import { TodoItem, TodosView } from "../../core/Todos";
-import { AppStore } from "../../core/Store";
+import { AppState } from "../../core/Store";
 import * as Action from "../../core/Actions";
-import * as Containers from "../../containers";
-import * as Components from "../../components";
+import { ContentPage } from "../../containers";
+import { TodoList } from "../../components";
 const { spring, presets, TransitionMotion } = require("react-motion");
 const Modernizr = require("modernizr") as __Modernizr.ModernizrStatic;
 import AppHistory from "../../core/History";
@@ -35,8 +35,12 @@ interface HomeState {
     filteredTodos?: TodoItem[];
 }
 
+// do not make it static class field: "react-transform-hmr" wraps class
+// with proxy and static fields become unavailable
+let _firstRender = true;
+
 class Home extends React.Component<HomeProps, HomeState> {
-    private _todoList: Components.TodoList;
+    private _todoList: TodoList;
 
     constructor(props: HomeProps) {
         super(props);
@@ -51,13 +55,6 @@ class Home extends React.Component<HomeProps, HomeState> {
         // this.props.addTodo(
         //     fetch("https://baconipsum.com/api/?type=all-meat&paras=10")
         //         .then(response => response.json()));
-
-        // this.props.addTodo([
-        //     "Watch movie from favorites",
-        //     "Call Alice tomorrow afternoon",
-        //     "Buy gifts for colleagues",
-        //     "Apply for a new job"
-        // ]);
     }
 
     shouldComponentUpdate(nextProps: HomeProps, nextState: HomeState, nextContext) {
@@ -122,15 +119,24 @@ class Home extends React.Component<HomeProps, HomeState> {
     }
 
     render() {
-        let enterStyle = { "opacity": 0         };
+        let anim = !_firstRender && !__SERVER__;
+        _firstRender = false;
+
+        let fixedStyle = { "opacity": 1 };
+        let enterStyle = { "opacity": 0 };
         let usualStyle = { "opacity": spring(1) };
         let leaveStyle = { "opacity": spring(0) };
+
+        if (!anim) {
+            enterStyle = fixedStyle;
+            usualStyle = fixedStyle;
+        }
 
         let getConfigs = style => this.props.todosTotal ? [{ key: "list", style }] : [];
         let defaultConfigs = getConfigs(enterStyle);
         let configs = getConfigs(usualStyle);
 
-        return <Containers.ContentPage withHeader={false}>
+        return <ContentPage withHeader={false}>
             <div className={classNames("ui stackable centered grid", Styles.root)}>
                 <div className="column">
                     <h2 className={classNames("ui header orange", Styles.mainHeader)}><i className="icon-checklist" /> todos</h2>
@@ -159,7 +165,7 @@ class Home extends React.Component<HomeProps, HomeState> {
                         {(configs: { key: string, data: TodoItem, style }[]) =>
                             <div>{configs.map(({ key, style }) =>
                                 <div key={key} style={style}>{
-                                    <Components.TodoList
+                                    <TodoList
                                         ref={ref => this._todoList = ref}
                                         todos={this.state.filteredTodos}
                                         emptyMessage={() =>
@@ -199,13 +205,13 @@ class Home extends React.Component<HomeProps, HomeState> {
                     </TransitionMotion>
                 </div>
             </div>
-        </Containers.ContentPage>
+        </ContentPage>
     }
 }
 
 export default ReactRedux.connect(
     // mapStateToProps
-    (state: AppStore, ownProps: HomeProps) => {
+    (state: AppState, ownProps: HomeProps) => {
         let todosView: TodosView;
         let todos: TodoItem[];
         let activeTodos = state.todos.filter(todo => !todo.completed);

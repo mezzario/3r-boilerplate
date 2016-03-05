@@ -2,17 +2,18 @@
 
 import * as React from "react"; React;
 const DocumentTitle = require("react-document-title");
+import AppConfig from "../../configs/AppConfig";
 const Styles = require("./App.less");
 
-interface AppProps extends /*React.Props<App>, */ReactRouter.RouteComponentProps<{}, {}> {
+interface AppContainerProps extends /*React.Props<Container>, */ReactRouter.RouteComponentProps<{}, {}> {
 }
 
-interface AppState {
+interface AppContainerState {
 }
 
-export default class App extends React.Component<AppProps, AppState> {
+export default class AppContainer extends React.Component<AppContainerProps, AppContainerState> {
     render() {
-        return <DocumentTitle title="Todo">
+        return <DocumentTitle title={AppConfig.title}>
             <div className={Styles.root}>{this.props.children}</div>
         </DocumentTitle>
     }
