@@ -20,16 +20,26 @@
     "url": "https://github.com/mezzario/3r-boilerplate.git"
   },
   "keywords": [
+    "boilerplate",
     "react",
     "redux",
     "router",
     "webpack",
     "typescript",
     "semantic ui",
-    "hot",
     "hmr",
+    "hot",
+    "module",
+    "replacement",
     "express",
-    "boilerplate"
+    "local",
+    "scope",
+    "css",
+    "less",
+    "postcss",
+    "autoprefixer",
+    "client",
+    "server"
   ],
   "author": "Eugene Baranchuk <vencedor@gmail.com> (http://github.com/mezzario)",
   "license": "MIT",
