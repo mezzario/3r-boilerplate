@@ -1,7 +1,7 @@
 {
-  "name": "typescript-redux-boilerplate",
+  "name": "3r-boilerplate",
   "version": "1.0.0",
-  "description": "typescript-redux-boilerplate",
+  "description": "modern, universal and simple web application boilerplate built using cutting-edge technologies",
   "scripts": {
     "clean:server-dev": "rimraf src/static src/server.js src/server.js.map",
     "clean:server-prod": "rimraf build/server.js build/server.js.map",
@@ -17,20 +17,26 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mezzario/typescript-redux-boilerplate.git"
+    "url": "https://github.com/mezzario/3r-boilerplate.git"
   },
   "keywords": [
-    "typescript",
     "react",
     "redux",
+    "router",
+    "webpack",
+    "typescript",
+    "semantic ui",
+    "hot",
+    "hmr",
+    "express",
     "boilerplate"
   ],
   "author": "Eugene Baranchuk <vencedor@gmail.com> (http://github.com/mezzario)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mezzario/typescript-redux-boilerplate/issues"
+    "url": "https://github.com/mezzario/3r-boilerplate/issues"
   },
-  "homepage": "https://github.com/mezzario/typescript-redux-boilerplate/",
+  "homepage": "https://github.com/mezzario/3r-boilerplate/",
   "dependencies": {
     "cheerio": "^0.20.0",
     "classnames": "^2.2.3",
