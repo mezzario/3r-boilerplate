@@ -33,7 +33,7 @@ export function configure(initialState?: AppState) {
         Redux.applyMiddleware(...middlewares),
         // please install https://github.com/zalmoxisus/redux-devtools-extension
         // chrome extension to use redux dev tools (open Redux tab in Chrome Developer Tools)
-        typeof window !== "undefined" && (window as any).devToolsExtension
+        __CLIENT__ && __DEVELOPMENT__ && (window as any).devToolsExtension
             ? (window as any).devToolsExtension() : f => f);
 
     let store: Redux.Store = enhancer(Redux.createStore)(reducer, initialState);

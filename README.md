@@ -1,8 +1,8 @@
 # 3r-boilerplate
 
-Modern, universal and simple **web application boilerplate** built using cutting-edge technologies.
-
 > **R**eact + **R**edux + **R**outer = 3**R**
+
+Modern, universal and simple **web application boilerplate** built using cutting-edge technologies.
 
 ![](https://raw.githubusercontent.com/mezzario/3r-boilerplate/assets/3r.gif)
 
@@ -13,11 +13,11 @@ Best technologies mixed in the right proportions to focus on **what** you want t
 Component | Description
 --------- | -----------
 **[React](https://github.com/facebook/react)** | UI library brought so many new trends into web development.
-**[Redux](https://github.com/reactjs/redux)** | Predictable state container, powerful and simple.
+**[Redux](https://github.com/reactjs/redux)**&nbsp;+&nbsp;**[DevTools](https://github.com/gaearon/redux-devtools)** | Predictable state container, powerful and simple. DevTools supported as [Chrome extension](https://github.com/zalmoxisus/redux-devtools-extension).
 **[React&nbsp;Router](https://github.com/reactjs/react-router)** | Routing that keeps your UI in sync with the URL.
 **[Webpack](https://github.com/webpack/webpack)** | Remarkable module bundler.
 **[TypeScript](https://github.com/Microsoft/TypeScript)** | Typed superset of JavaScript. Led by outstanding [Anders Hejlsberg](https://en.wikipedia.org/wiki/Anders_Hejlsberg).
-**[LESS](https://github.com/less/less.js)** | CSS pre-processor of choice. Replace with [Sass](https://github.com/sass/sass)/[Stylus](https://github.com/stylus/stylus)/[PostCSS](https://github.com/postcss/postcss), if needed.
+**[LESS](https://github.com/less/less.js)** | CSS pre-processor of choice. Replace with [Sass](https://github.com/sass/sass) / [Stylus](https://github.com/stylus/stylus) / [PostCSS](https://github.com/postcss/postcss), if needed.
 **[Semantic UI](https://github.com/Semantic-Org/Semantic-UI)** | UI component framework based around useful principles from natural language.
 **[Local CSS](https://github.com/webpack/css-loader#local-scope)** | Scope CSS to specific elements using auto-generated unique identifiers for class names.
 **[Autoprefixer](https://github.com/postcss/autoprefixer)** | Auto-generate vendor prefixes for CSS rules.
@@ -31,11 +31,89 @@ Component | Description
 
 Main benefits of being [universal](https://medium.com/@mjackson/universal-javascript-4761051b7ae9) is availability to search engines, browsers without (or disabled) JavaScript and improved visual experience on first render.
 
-* Switch universality using **single flag** in configuration (enabled by default).
+* Switch universality using single flag in configuration (enabled by default).
 * If enabled, [HTML5 Browser History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) is used to manage URL.
 * If disabled, app will be served as a **static website** and fallback to [location.hash](http://www.w3schools.com/jsref/prop_loc_hash.asp) to manage URL.
 * For development universal and static versions are served by the same server component. It reduces code complexity and efforts to test it.
 
 ### Simple
 
+Boilerplate include minimum configuration and components to get you started quickly and add more stuff later, if needed.
+
+* Four **build configurations** managed in single file [`WebpackConfigurator.ts`](https://github.com/mezzario/3r-boilerplate/blob/master/src/configs/WebpackConfigurator.ts):
+    * `server:development`
+    * `server:production`
+    * `client:development`
+    * `client:production`
+
+
+* Two **entry points**:
+    * [`server.tsx`](https://github.com/mezzario/3r-boilerplate/blob/master/src/server.tsx)
+    * [`client.tsx`](https://github.com/mezzario/3r-boilerplate/blob/master/src/client.tsx)
+
+
+* **Containers**
+    * [`App`](https://github.com/mezzario/3r-boilerplate/tree/master/src/containers/App/App.tsx): main application container. Hosts other containers.
+    * [`Home`](https://github.com/mezzario/3r-boilerplate/tree/master/src/containers/Home/Home.tsx): "index" container for application.
+    * [`NotFound`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/NotFound/NotFound.tsx): container to show "Page Not Found" message to user.
+    * [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.tsx): optional container to use inside other containers. Will render header and/or sticky footer. See example in [`Home`](https://github.com/mezzario/3r-boilerplate/tree/master/src/containers/Home/Home.tsx) container.
+
+
+* **Components**
+    * [`PageHeader`](https://github.com/mezzario/3r-boilerplate/tree/master/src/components/PageHeader/PageHeader.tsx), [`PageFooter`](https://github.com/mezzario/3r-boilerplate/tree/master/src/components/PageFooter/PageFooter.tsx): app's common page header and footer. Do not add directly. Instead, use [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.tsx) container as a host.
+
+## Overview
+
+Webpack is used as a bundler for both server and client entries.
+
+### Server Bundle
+
+Generating server bundle with Webpack allows us to handle CSS, images and other resources correctly, extracting and removing them from resulting module. That means you should rebuild server every time you made (server-related) changes. In practice you won't do it often: most of the changes are client-related and propagated using hot updates without page reload.
+
+If page is reloaded, server response may differ from what's rendered on client and you'll get warning from React similar to this:
+
+```
+Warning: React attempted to reuse markup in a container but the checksum
+    was invalid. This generally means that you are using server rendering
+    and the markup generated on the server was not what the client was
+    expecting. React injected new markup to compensate which works but you
+    have lost many of the benefits of server rendering. Instead, figure out
+    why the markup being generated is different on the client or server: ...
+```
+
+You can ignore this message as long as you know that markup differs because of outdated server.
+
+### Client Bundle
+
+For development client bundle is generated on-the-fly using Webpack's middleware for Express. It provides HMR support as well.
+
+For production static bundle is generated into `build` folder.
+
 ## Usage
+
+### Quick start
+
+```
+npm i
+npm start
+```
+
+Then browse to [localhost:3000](http://localhost:3000/)
+
+### npm scripts
+
+Build & Run | &nbsp;
+:------ | -----------
+`npm start` | Synonym for `npm run start:server-dev`.
+`npm run start:server-dev` | Builds and runs server for development.
+`npm run start:prod` | Build and run production version of server and client.
+**Build only** | &nbsp;
+`npm run build:server-dev` | Build server development bundle.
+`npm run build:server-prod` | Build server production bundle.
+`npm run build:client-prod` | Build client production bundle.
+`npm run build:prod` | Build server and client production bundles.
+**Clean** | &nbsp;
+`npm run clean` | Clean all auto-generated files.
+`npm run clean:server-prod` | Clean server production auto-generated files.
+`npm run clean:prod` | Clean client and server production auto-generated files.
+`npm run clean:server-dev` | Clean server development auto-generated files.

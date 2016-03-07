@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "description": "modern, universal and simple web application boilerplate built using cutting-edge technologies",
   "scripts": {
-    "clean:server-dev": "rimraf src/static src/server.js src/server.js.map",
-    "clean:server-prod": "rimraf build/server.js build/server.js.map",
-    "clean:prod": "rimraf build",
-    "clean": "npm run clean:server-dev && npm run clean:prod",
     "build:server-dev": "npm run clean:server-dev && APP_TARGET=server NODE_ENV=development node scripts/build-server",
     "build:server-prod": "npm run clean:server-prod && APP_TARGET=server NODE_ENV=production node scripts/build-server && rimraf build/static/bundle.css build/static/bundle.css.map",
     "build:client-prod": "npm run clean:prod && mkdir -p build && cp src/favicon.ico build/ && APP_TARGET=client NODE_ENV=production webpack --config webpack.config.js --progress",
     "build:prod": "npm run build:client-prod && npm run build:server-prod",
-    "start:dev": "npm run build:server-dev && APP_TARGET=server NODE_ENV=development node src/server.js",
+    "clean:server-dev": "rimraf src/static src/server.js src/server.js.map",
+    "clean:server-prod": "rimraf build/server.js build/server.js.map",
+    "clean:prod": "rimraf build",
+    "clean": "npm run clean:server-dev && npm run clean:prod",
+    "start:server-dev": "npm run build:server-dev && APP_TARGET=server NODE_ENV=development node src/server.js",
     "start:prod": "npm run build:prod && cd build && APP_TARGET=server NODE_ENV=production node server.js",
-    "start": "npm run start:dev"
+    "start": "npm run start:server-dev"
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,9 @@
     "postcss",
     "autoprefixer",
     "client",
-    "server"
+    "server",
+    "universal",
+    "isomorphic"
   ],
   "author": "Eugene Baranchuk <vencedor@gmail.com> (http://github.com/mezzario)",
   "license": "MIT",
