@@ -45,17 +45,17 @@ Boilerplate include minimum configuration and components to get you started quic
     * `server:production`
     * `client:development`
     * `client:production`
-<br/>
+<br/><br/>
 * Two **entry points**
     * [`server.tsx`](https://github.com/mezzario/3r-boilerplate/blob/master/src/server.tsx)
     * [`client.tsx`](https://github.com/mezzario/3r-boilerplate/blob/master/src/client.tsx)
-<br/>
+<br/><br/>
 * **Containers**
     * [`App`](https://github.com/mezzario/3r-boilerplate/tree/master/src/containers/App/App.tsx): main application container. Hosts other containers.
     * [`Home`](https://github.com/mezzario/3r-boilerplate/tree/master/src/containers/Home/Home.tsx): "index" container for application.
     * [`NotFound`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/NotFound/NotFound.tsx): container to show "Page Not Found" message to user.
     * [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.tsx): optional container to use inside other containers. Will render header and/or sticky footer. See example in [`Home`](https://github.com/mezzario/3r-boilerplate/tree/master/src/containers/Home/Home.tsx) container.
-<br/>
+<br/><br/>
 * **Components**
     * [`PageHeader`](https://github.com/mezzario/3r-boilerplate/tree/master/src/components/PageHeader/PageHeader.tsx), [`PageFooter`](https://github.com/mezzario/3r-boilerplate/tree/master/src/components/PageFooter/PageFooter.tsx): app's common page header and footer. Do not add directly. Instead, use [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.tsx) container as a host.
 
