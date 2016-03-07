@@ -11,7 +11,7 @@ Modern, universal and simple **web application boilerplate** built using cutting
 Best technologies mixed in the right proportions to focus on **what** you want to do, not **how**:
 
 Component | Description
---------- | -----------
+:-------- | :----------
 **[React](https://github.com/facebook/react)** | UI library brought so many new trends into web development.
 **[Redux](https://github.com/reactjs/redux)**&nbsp;+&nbsp;**[DevTools](https://github.com/gaearon/redux-devtools)** | Predictable state container, powerful and simple. DevTools supported as [Chrome extension](https://github.com/zalmoxisus/redux-devtools-extension).
 **[React&nbsp;Router](https://github.com/reactjs/react-router)** | Routing that keeps your UI in sync with the URL.
@@ -73,7 +73,7 @@ Webpack is used as a bundler for both server and client entries.
 
 ### Server Bundle
 
-Generating server bundle with Webpack handles `require` calls to modules, supported only through Webpack's loaders (like CSS or images, for example), extracting and removing them from resulting module. In theory that also means you should rebuild server every time you made (server-related) changes. In practice you won't do it often: most of the changes are client-related and propagated using hot updates without page reload.
+Generating server bundle with Webpack handles `require` calls to modules, supported only through Webpack loaders (like CSS or images, for example), extracting and removing them from resulting module. In theory that also means you should rebuild server every time you make (server-related) changes. In practice you won't do it often: most of the changes are client-related and propagated using hot updates without page reload.
 
 If page is reloaded, server response may differ from what's rendered on client and you'll get warning from React similar to this:
 
@@ -108,7 +108,7 @@ Then browse to [localhost:3000](http://localhost:3000/)
 ### npm scripts
 
 Build & Run | &nbsp;
-:------ | -----------
+:---------- | :-----
 `npm start` | Synonym for `npm run dev`.
 `npm run dev` | Build and run development version of server and client.
 `npm run prod` | Build and run production version of server and client.
