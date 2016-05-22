@@ -6,17 +6,19 @@ import * as ReactRedux from "react-redux";
 import * as ReactRouter from "react-router";
 const RouterContext = ReactRouter.RouterContext as any;
 import * as ReduxRouter from "react-router-redux";
-import Routes from "./core/Routes";
-import * as AppStore from "./core/Store";
-import AppHistory from "./core/History";
-import * as WebpackConfigurator from "./configs/WebpackConfigurator";
-const Express = require("express");
+import * as ExpressModule from "express";
+const Express = require("express") as typeof ExpressModule;
 const Compression = require("compression");
 const ServeFavicon = require("serve-favicon");
 const Cheerio = require("cheerio") as CheerioAPI;
 const Chalk = require("chalk");
-import AppConfig from "./configs/AppConfig";
 const DocumentTitle = require("react-document-title");
+
+import Routes from "./core/Routes";
+import * as AppStore from "./core/Store";
+import AppHistory from "./core/History";
+import * as WebpackConfigurator from "./configs/WebpackConfigurator";
+import AppConfig from "./configs/AppConfig";
 
 const appStore = AppStore.configure(
     // { // initial test data
@@ -60,7 +62,7 @@ else {
     app.use("/static", Express.static(Path.resolve("static")));
 
     app.use((req, res) => {
-        ReactRouter.match({ routes: Routes(appHistory), location: req.url },
+        ReactRouter.match({ routes: Routes(appHistory), location: req.url as any },
             (error, redirectLocation, renderProps) => {
                 if (error)
                     res.status(500).send(error.message);

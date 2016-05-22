@@ -1,4 +1,5 @@
 import * as FileSystem from "fs";
+const MemoryFileSystem = require("memory-fs");
 import * as Path from "path";
 import * as Webpack from "webpack";
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -9,10 +10,15 @@ export const buildSubpath = "build";
 export const staticSubpath = "static";
 export const inlineFileSizeLimit = 0x4000;
 
-export function configure(
-    appTarget = (process.env.APP_TARGET as string || "client").trim().toLowerCase(),
-    nodeEnv = (process.env.NODE_ENV as string || "development").trim().toLowerCase()
-) {
+export function getAppTarget() {
+    return (process.env.APP_TARGET as string || "client").trim().toLowerCase();
+}
+
+export function getNodeEnv() {
+    return (process.env.NODE_ENV as string || "development").trim().toLowerCase();
+}
+
+export function configure(appTarget = getAppTarget(), nodeEnv = getNodeEnv()) {
     const cssLoaders = [
         "style",
         "css?localIdentName=" + choose({
@@ -257,7 +263,42 @@ export function configure(
         }
     }
 
-    console.info(Chalk.dim(`\nGenerated Webpack config for appTarget = "${appTarget}", nodeEnv = "${nodeEnv}".\n`));
+    console.info(Chalk.dim(`\nGenerated Webpack config for appTarget = "${appTarget}", nodeEnv = "${nodeEnv}"\n`));
 
     return config;
 }
+
+export function serverCompileFile(filename: string, nodeEnv = getNodeEnv()) {
+    console.info(Chalk.dim(`\nCompiling '${filename}' on server for nodeEnv = "${nodeEnv}"...\n`));
+
+    let webpackConfig = configure("server", nodeEnv);
+    webpackConfig.entry = filename;
+    webpackConfig.output = { path: "/", filename: "compiled" };
+
+    let compiler = Webpack(webpackConfig);
+    compiler.outputFileSystem = new MemoryFileSystem();
+
+    compiler.run((error, statsData) => {
+        if (error)
+            console.error(Chalk.red(`ERROR:\n${error}\n`));
+        else {
+            let stats = statsData.toJson();
+            //FileSystem.writeFileSync(Path.join(Path.resolve("."), "stats.json"), JSON.stringify(stats, null, "  "), "utf8");
+
+            if (stats.errors.length)
+                stats.errors.forEach(s => console.error(Chalk.red(`ERROR:\n${s}\n`)));
+            else {
+                stats.warnings.forEach(s => console.log(Chalk.dim(`WARNING:\n${s}\n`)));
+
+                let filename = Path.join(webpackConfig.output.path, webpackConfig.output.filename);
+                let text = compiler.outputFileSystem.readFileSync(filename, "utf8");
+                let result = eval(text);
+
+                console.log(result);
+            }
+        }
+    });
+}
+
+// example:
+// WebpackConfigurator.serverCompileFile(Path.resolve("src/containers/Home/Home.less"), "development");

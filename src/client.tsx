@@ -20,7 +20,7 @@ ReactDOM.render(
 
 if (__DEVELOPMENT__) {
     // remove server css bundle to not interfere with styles applied by webpack's style-loader
-    let cssBundleElem = document.getElementById("server-bundle-css");
+    let cssBundleElem = document.getElementById("css-bundle");
     cssBundleElem.parentNode.removeChild(cssBundleElem);
 }
 
