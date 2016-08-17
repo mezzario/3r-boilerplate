@@ -1,0 +1,7 @@
+src/~build-server/**
+src/~build-client/**
+src/build/**
+**/node_modules/**
+src/content/vendor/icomoon/**
+src/content/vendor/semantic/**
+src/server.js

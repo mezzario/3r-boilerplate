@@ -14,14 +14,27 @@
 
         > .block {
             display: inline-block;
-            margin: 0 .6em;
-        }
+            margin: 0 .5em;
 
-        .credit {
-            color: @gInactiveColor;
-            font-size: .8em;
-            position: relative;
-            top: -.4em;
+            &.credit {
+                font-size: .8em;
+                position: relative;
+                top: -.4em;
+
+                > a {
+                    color: @gInactiveColor;
+
+                    > em {
+                        font-style: normal;
+                    }
+
+                    &:hover {
+                        > em {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -15,8 +15,8 @@ Component | Description
 **[React](https://github.com/facebook/react)** | UI library brought so many new trends into web development.
 **[Redux](https://github.com/reactjs/redux)**&nbsp;+&nbsp;**[DevTools](https://github.com/gaearon/redux-devtools)** | Predictable state container, powerful and simple. DevTools supported as [Chrome extension](https://github.com/zalmoxisus/redux-devtools-extension).
 **[React&nbsp;Router](https://github.com/reactjs/react-router)** | Routing that keeps your UI in sync with the URL.
+**[Babel](https://github.com/babel/babel)** | The compiler for writing next generation JavaScript.
 **[Webpack](https://github.com/webpack/webpack)** | Remarkable module bundler.
-**[TypeScript](https://github.com/Microsoft/TypeScript)** | Typed superset of JavaScript. Led by outstanding [Anders Hejlsberg](https://en.wikipedia.org/wiki/Anders_Hejlsberg).
 **[LESS](https://github.com/less/less.js)** | CSS pre-processor of choice. Replace with [Sass](https://github.com/sass/sass) / [Stylus](https://github.com/stylus/stylus) / [PostCSS](https://github.com/postcss/postcss), etc, if needed.
 **[Semantic UI](https://github.com/Semantic-Org/Semantic-UI)** | UI component framework based around useful principles from natural language. Replace with [Bootstrap](https://github.com/twbs/bootstrap) / [Foundation](https://github.com/zurb/foundation-sites) / [Pure](https://github.com/yahoo/pure/), etc, if needed.
 **[Local CSS](https://github.com/webpack/css-loader#local-scope)** | Scope CSS to specific elements using auto-generated unique identifiers for class names.
@@ -31,7 +31,7 @@ Component | Description
 
 Main benefits of being [universal](https://medium.com/@mjackson/universal-javascript-4761051b7ae9) is availability to search engines, browsers without (or disabled) JavaScript and improved visual experience on first render.
 
-* Switch universality using single flag in [configuration](https://github.com/mezzario/3r-boilerplate/blob/master/src/configs/AppConfig.ts) (enabled by default).
+* Switch universality using single flag in [configuration](https://github.com/mezzario/3r-boilerplate/blob/master/src/configs/AppConfig.js) (enabled by default).
 * If enabled, [HTML5 Browser History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) is used to manage URL.
 * If disabled, app will be served as a **static website** and fallback to [location.hash](http://www.w3schools.com/jsref/prop_loc_hash.asp) to manage URL.
 * For development universal and static versions are served by the same server component. It reduces code complexity and efforts to test it.
@@ -40,32 +40,32 @@ Main benefits of being [universal](https://medium.com/@mjackson/universal-javasc
 
 Boilerplate include minimum configuration and components to get you started quickly and add more stuff later, if needed.
 
-* Four **build configurations** managed in single file [`WebpackConfigurator.ts`](https://github.com/mezzario/3r-boilerplate/blob/master/src/configs/WebpackConfigurator.ts)
+* Four **build configurations** managed in single file [`WebpackConfigurator.js`](https://github.com/mezzario/3r-boilerplate/blob/master/src/configs/WebpackConfigurator.js)
     * `server:development`
     * `server:production`
     * `client:development`
     * `client:production`
 <br/><br/>
 * Two **entry points**
-    * [`server.tsx`](https://github.com/mezzario/3r-boilerplate/blob/master/src/server.tsx)
-    * [`client.tsx`](https://github.com/mezzario/3r-boilerplate/blob/master/src/client.tsx)
+    * [`server.jsx`](https://github.com/mezzario/3r-boilerplate/blob/master/src/server.jsx)
+    * [`client.jsx`](https://github.com/mezzario/3r-boilerplate/blob/master/src/client.jsx)
 <br/><br/>
 * **Core components**
-    * [`Actions`](https://github.com/mezzario/3r-boilerplate/blob/master/src/core/Actions.ts): Redux action definitions.
-    * [`History`](https://github.com/mezzario/3r-boilerplate/blob/master/src/core/History.ts): Exports current browser history manager.
-    * [`Routes`](https://github.com/mezzario/3r-boilerplate/blob/master/src/core/Routes.tsx): Application routes definition.
-    * [`Store`](https://github.com/mezzario/3r-boilerplate/blob/master/src/core/Store.ts): Redux store configurator.
+    * [`Actions`](https://github.com/mezzario/3r-boilerplate/blob/master/src/core/Actions.js): Redux action definitions.
+    * [`History`](https://github.com/mezzario/3r-boilerplate/blob/master/src/core/History.js): Exports current browser history manager.
+    * [`Routes`](https://github.com/mezzario/3r-boilerplate/blob/master/src/core/Routes.jsx): Application routes definition.
+    * [`Store`](https://github.com/mezzario/3r-boilerplate/blob/master/src/core/Store.js): Redux store configurator.
 <br/><br/>
 * **Reducers**
 <br/><br/>
 * **UI containers**
-    * [`App`](https://github.com/mezzario/3r-boilerplate/tree/master/src/containers/App/App.tsx): main application container. Hosts other containers.
-    * [`Home`](https://github.com/mezzario/3r-boilerplate/tree/master/src/containers/Home/Home.tsx): "index" container for application.
-    * [`NotFound`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/NotFound/NotFound.tsx): container to show "Page Not Found" message to user.
-    * [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.tsx): optional container to use inside other containers. Will render header and/or sticky footer. See example in [`Home`](https://github.com/mezzario/3r-boilerplate/tree/master/src/containers/Home/Home.tsx) container.
+    * [`App`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/App/App.jsx): main application container. Hosts other containers.
+    * [`Home`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/Home/Home.jsx): "index" container for application.
+    * [`NotFound`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/NotFound/NotFound.jsx): container to show "Page Not Found" message to user.
+    * [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.jsx): optional container to render header and sticky footer.
 <br/><br/>
 * **UI components**
-    * [`PageHeader`](https://github.com/mezzario/3r-boilerplate/tree/master/src/components/PageHeader/PageHeader.tsx), [`PageFooter`](https://github.com/mezzario/3r-boilerplate/tree/master/src/components/PageFooter/PageFooter.tsx): app's common page header and sticky footer. Do not add directly. Instead, use [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.tsx) container as a host.
+    * [`PageHeader`](https://github.com/mezzario/3r-boilerplate/blob/master/src/components/PageHeader/PageHeader.jsx), [`PageFooter`](https://github.com/mezzario/3r-boilerplate/blob/master/src/components/PageFooter/PageFooter.jsx): app's common page header and sticky footer. Do not add directly. Instead, use [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.jsx) container as a host.
 
 ## Overview
 
@@ -107,18 +107,15 @@ Then browse to [localhost:3000](http://localhost:3000/)
 
 ### npm scripts
 
-Build & Run | &nbsp;
+**Lint** | &nbsp;
 :---------- | :-----
+`npm run lint` | Lint project with help of `eslint`.
+**Build & Run** | &nbsp;
 `npm start` | Synonym for `npm run dev`.
-`npm run dev` | Build and run development version of server and client.
-`npm run prod` | Build and run production version of server and client.
+`npm run dev` | Lint, build and run development version of server and client.
+`npm run prod` | Lint, build and run production version of server and client.
 **Build** | &nbsp;
 `npm run build:server-dev` | Build server development bundle.
 `npm run build:server-prod` | Build server production bundle.
 `npm run build:client-prod` | Build client production bundle.
 `npm run build:prod` | Build server and client production bundles.
-**Clean** | &nbsp;
-`npm run clean` | Clean all auto-generated files.
-`npm run clean:server-dev` | Clean server development auto-generated files.
-`npm run clean:server-prod` | Clean server production auto-generated files.
-`npm run clean:prod` | Clean client and server production auto-generated files.

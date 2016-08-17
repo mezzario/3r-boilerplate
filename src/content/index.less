@@ -1,5 +1,5 @@
-@import "./semantic/src/semantic";
-@import "./icomoon/style.css";
+@import "./vendor/semantic/src/semantic";
+@import "./vendor/icomoon/style.css";
 @import "./globals";
 
 html,
@@ -7,6 +7,7 @@ body {
     -webkit-text-size-adjust: none;
     -moz-text-size-adjust: none;
     -ms-text-size-adjust: none;
+
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
@@ -20,5 +21,14 @@ body,
 
 [class^="icon-"],
 [class*=" icon-"] {
-    margin-right: 0.3rem;
+    margin-right: 0.25rem;
+}
+
+.appear-fadein-appear {
+    opacity: 0.01;
+
+    &.appear-fadein-appear-active {
+        opacity: 1;
+        transition: opacity .5s ease-in;
+    }
 }

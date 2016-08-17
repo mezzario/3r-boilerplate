@@ -35,9 +35,11 @@
 
         &.edit,
         &.delete {
-            html.no-touchevents & {
-                transition: opacity .3s ease-out;
-                opacity: 0;
+            transition: opacity .3s ease-out;
+            opacity: 0;
+
+            html.touchevents & {
+                opacity: 1;
             }
         }
     }
@@ -48,6 +50,7 @@
         transform: translateY(-50%);
         left: .9em;
         right: 5em;
+        text-align: left;
 
         .checkbox {
             cursor: pointer;
@@ -96,9 +99,7 @@
         .inline-button {
             &.edit,
             &.delete {
-                html.no-touchevents & {
-                    opacity: 1;
-                }
+                opacity: 1;
             }
         }
     }

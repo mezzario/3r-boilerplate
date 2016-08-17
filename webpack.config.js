@@ -1,8 +1,7 @@
-"use strict";
+"use strict"
 
-const BuildUtils = require("./scripts/build-utils");
-const WebpackConfigurator = eval(BuildUtils.transpileTsFile("src/configs/WebpackConfigurator.ts"));
+const WebpackConfigurator = require("./src/configs/WebpackConfigurator")
 
-let config = WebpackConfigurator.configure();
+let config = WebpackConfigurator.configure()
 
-module.exports = config;
+module.exports = config

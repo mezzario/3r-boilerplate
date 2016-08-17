@@ -1,11 +1,14 @@
 .vs
 bin
 obj
-build
 node_modules
 .DS_Store
 .ntvs_analysis.dat
 npm-debug.log
+/src/build
+/src/~build-server
+/src/~build-client
+/src/content/bundle.css
+/src/content/bundle.css.map
 /src/server.js
 /src/server.js.map
-/src/static

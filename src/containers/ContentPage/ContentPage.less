@@ -2,17 +2,16 @@
 
 :local(.root) {
     height: 100%;
+    padding: 0 !important;
 
-    &.with-footer {
-        > .content-wrapper {
-            min-height: 100%;
-            margin-bottom: -@gFooterHeight;
+    > .content-wrapper {
+        min-height: 100%;
+        margin-bottom: -@gFooterHeight;
 
-            &:after {
-                content: "";
-                display: block;
-                height: @gFooterHeight;
-            }
+        &:after {
+            content: "";
+            display: block;
+            height: @gFooterHeight;
         }
     }
 
