@@ -3,7 +3,7 @@
         "react"
     ],
     "extends": [
-        "eslint:recommended",
+        "eslint:recommended", # https://github.com/eslint/eslint/blob/master/conf/eslint.json
         "plugin:react/recommended"
     ],
     "parser": "babel-eslint",
@@ -16,13 +16,16 @@
         "es6": true
     },
     "rules": {
-        "quotes": [2, "double", { "avoidEscape": true, "allowTemplateLiterals": true }],
+        "quotes": ["error", "double", { "avoidEscape": true, "allowTemplateLiterals": true }],
         "indent": ["error", 4, { "SwitchCase": 1 }],
-        "react/jsx-uses-react": 1,
-        "react/jsx-uses-vars": 1,
-        "react/jsx-no-undef": 2,
-        "react/no-danger": 0,
-        "react/display-name": 0
+        "semi": ["warn", "never"],
+        "no-console": "warn",
+
+        "react/jsx-uses-react": "warn",
+        "react/jsx-uses-vars": "warn",
+        "react/jsx-no-undef": "error",
+        "react/no-danger": "off",
+        "react/display-name": "off"
     },
     "globals": {
         "__CLIENT__": false,

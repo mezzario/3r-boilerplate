@@ -9,7 +9,7 @@ function createReducer(reducers) {
     return reducer
 }
 
-export function configure(initialState?) {
+export function configure(initialState) {
     let reducer = createReducer(Reducers)
     let middlewares = [ReduxThunk, ReduxPromise]
 
