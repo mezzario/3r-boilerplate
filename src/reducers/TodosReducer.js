@@ -3,7 +3,7 @@ import * as Action from "../core/Actions"
 
 export default ReduxActions.handleActions({
     [Action.AddTodo]: (state, action) => {
-        let nextId = Math.max.apply(null, state.map(o => o.id)) + 1
+        let nextId = (state.length > 0 ? Math.max.apply(null, state.map(o => o.id)) : 0) + 1
 
         return [
             ...(Array.isArray(action.payload) ? action.payload : [action.payload])
