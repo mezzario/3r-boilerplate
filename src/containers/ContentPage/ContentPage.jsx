@@ -14,7 +14,6 @@ class ContentPage extends React.Component {
         return <div className={Styles.root}>
             <div className="content-wrapper">
                 <PageHeader />
-
                 {this.props.children}
             </div>
 

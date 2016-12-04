@@ -3,7 +3,7 @@
         "react"
     ],
     "extends": [
-        "eslint:recommended", # https://github.com/eslint/eslint/blob/master/conf/eslint.json
+        "eslint:recommended", // https://github.com/eslint/eslint/blob/master/conf/eslint.json
         "plugin:react/recommended"
     ],
     "parser": "babel-eslint",
@@ -20,6 +20,7 @@
         "indent": ["error", 4, { "SwitchCase": 1 }],
         "semi": ["warn", "never"],
         "no-console": "warn",
+        "no-unused-vars": "warn",
 
         "react/jsx-uses-react": "warn",
         "react/jsx-uses-vars": "warn",

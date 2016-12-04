@@ -1,13 +1,16 @@
 import * as ReduxActions from "redux-actions"
 import * as Action from "../core/Actions"
 
-let _nextId = 1
-
 export default ReduxActions.handleActions({
-    [Action.AddTodo]: (state, action) =>
-        [...(Array.isArray(action.payload) ? action.payload : [action.payload])
-            .map(text => ({ id: _nextId++, text, completed: false })),
-        ...state],
+    [Action.AddTodo]: (state, action) => {
+        let nextId = Math.max.apply(null, state.map(o => o.id)) + 1
+
+        return [
+            ...(Array.isArray(action.payload) ? action.payload : [action.payload])
+                .map(text => ({ id: nextId++, text, completed: false })),
+            ...state
+        ]
+    },
 
     [Action.DeleteTodo]: (state, action) =>
         state.filter(todo => todo.id !== action.payload),

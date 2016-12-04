@@ -9,8 +9,8 @@ export default history =>
                 <IndexRoute component={Containers.Home} onEnter={fixIndexRoute} />
                 <Route path="/active" component={Containers.Home} />
                 <Route path="/completed" component={Containers.Home} />
+                <Route path="*" component={Containers.NotFound} />
             </Route>
-            <Route path="*" component={Containers.NotFound} />
         </Route>
     </Router>
 

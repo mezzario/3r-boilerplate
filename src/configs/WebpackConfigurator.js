@@ -9,15 +9,9 @@ const Webpack = require("webpack")
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const Chalk = require("chalk")
 const Cheerio = require("cheerio")
-//const AppConfig = require("./AppConfig")
 
-function getAppTarget() {
-    return (process.env.APP_TARGET || "client").trim().toLowerCase()
-}
-
-function getNodeEnv() {
-    return (process.env.NODE_ENV || "development").trim().toLowerCase()
-}
+const getAppTarget = () => (process.env.APP_TARGET || "client").trim().toLowerCase()
+const getNodeEnv = () => (process.env.NODE_ENV || "development").trim().toLowerCase()
 
 const inlineFileSizeLimit = 16384
 const buildServerDir = "~build-server"
@@ -37,14 +31,6 @@ function configure(appTarget, nodeEnv) {
     ]
 
     const lessLoaders = cssLoaders.concat("less")
-
-    const defs = {
-        "process.env.NODE_ENV": `"${nodeEnv}"`,
-        __CLIENT__: appTarget === "client",
-        __SERVER__: appTarget === "server",
-        __DEVELOPMENT__: nodeEnv === "development",
-        __PRODUCTION__: nodeEnv === "production"
-    }
 
     const babelOptions = {
         presets: [
@@ -69,6 +55,17 @@ function configure(appTarget, nodeEnv) {
             "*": []
         })
     }
+
+    const commonPlugins = [
+        new Webpack.DefinePlugin({
+            "process.env.NODE_ENV": `"${nodeEnv}"`,
+            __CLIENT__: appTarget === "client",
+            __SERVER__: appTarget === "server",
+            __DEVELOPMENT__: nodeEnv === "development",
+            __PRODUCTION__: nodeEnv === "production"
+        }),
+        new Webpack.optimize.OccurrenceOrderPlugin(true)
+    ]
 
     let config = {
         debug: choose({
@@ -162,33 +159,32 @@ function configure(appTarget, nodeEnv) {
                     ]
                 },
 
-                { test: /\.eot(\?[a-z0-9\.#=]+)?$/i,
-                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/vnd.ms-fontobject" },
+                {   test: /\.eot(\?[a-z0-9\.#=]+)?$/i,
+                    loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/vnd.ms-fontobject" },
 
-                { test: /\.ttf(\?[a-z0-9\.#=]+)?$/i,
-                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/octet-stream" },
+                {   test: /\.ttf(\?[a-z0-9\.#=]+)?$/i,
+                    loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/octet-stream" },
 
-                { test: /\.woff(\?[a-z0-9\.#=]+)?$/i,
-                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/font-woff" },
+                {   test: /\.woff(\?[a-z0-9\.#=]+)?$/i,
+                    loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/font-woff" },
 
-                { test: /\.woff2(\?[a-z0-9\.#=]+)?$/i,
-                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/font-woff2" },
+                {   test: /\.woff2(\?[a-z0-9\.#=]+)?$/i,
+                    loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=application/font-woff2" },
 
-                { test: /\.svg(\?[a-z0-9\.#=]+)?$/i,
-                  loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=image/svg+xml" },
+                {   test: /\.svg(\?[a-z0-9\.#=]+)?$/i,
+                    loader: "url?limit=" + inlineFileSizeLimit + "&mimetype=image/svg+xml" },
 
-                { test: /\.modernizrrc$/, loader: "modernizr" }
+                {   test: /\.modernizrrc$/, loader: "modernizr" }
             ]
         },
         plugins: choose({
             "client:development": [
-                new Webpack.DefinePlugin(defs),
+                ...commonPlugins,
                 new Webpack.HotModuleReplacementPlugin(),
                 new Webpack.NoErrorsPlugin()
             ],
             "client:production": [
-                new Webpack.DefinePlugin(defs),
-                new Webpack.optimize.OccurenceOrderPlugin(true),
+                ...commonPlugins,
                 new Webpack.optimize.UglifyJsPlugin({
                     compress: {
                         warnings: false
@@ -210,8 +206,8 @@ function configure(appTarget, nodeEnv) {
                             let mainJsFileName = stats.assetsByChunkName.main.find(s => !!s.match(/\.js$/i))
                             let $ = Cheerio.load(html)
 
-                            $("#css-bundle").attr("href", `/content/${mainCssFileName}`)
-                            $("#js-bundle").attr("src", `/content/${mainJsFileName}`)
+                            $("#css-bundle").attr("href", Path.join("/content", mainCssFileName))
+                            $("#js-bundle").attr("src", Path.join("/content", mainJsFileName))
 
                             let htmlOutput = $.html()
 
@@ -222,8 +218,7 @@ function configure(appTarget, nodeEnv) {
                 }
             ],
             "server:*": [
-                new Webpack.DefinePlugin(defs),
-                new Webpack.optimize.OccurenceOrderPlugin(true),
+                ...commonPlugins,
                 new Webpack.NormalModuleReplacementPlugin(/modernizr$/i, "node-noop"),
                 new ExtractTextPlugin("bundle.css", { allChunks: true })
             ]

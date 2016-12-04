@@ -1,5 +1,6 @@
 @import "./vendor/semantic/src/semantic";
 @import "./vendor/icomoon/style.css";
+@import "./vendor/animations";
 @import "./globals";
 
 html,
@@ -22,13 +23,4 @@ body,
 [class^="icon-"],
 [class*=" icon-"] {
     margin-right: 0.25rem;
-}
-
-.appear-fadein-appear {
-    opacity: 0.01;
-
-    &.appear-fadein-appear-active {
-        opacity: 1;
-        transition: opacity .5s ease-in;
-    }
 }
