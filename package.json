@@ -9,7 +9,7 @@
     "build:client-prod": "rimraf src/~build-client && cross-env APP_TARGET=client NODE_ENV=production webpack --config webpack.config.js --progress",
     "build:prod": "rimraf src/build && npm run build:server-prod && npm run build:client-prod && mkdir src/build && ncp src/~build-server/server.js src/build/server.js && ncp src/~build-server/server.js.map src/build/server.js.map && ncp src/~build-client/ src/build && rimraf src/~build-server && rimraf src/~build-client",
     "dev": "npm run lint && npm run build:server-dev && cross-env APP_TARGET=server NODE_ENV=development node src/server.js",
-    "prod": "npm run lint && npm run build:prod && cd build && cross-env APP_TARGET=server NODE_ENV=production node server.js",
+    "prod": "npm run lint && npm run build:prod && cd src/build && cross-env APP_TARGET=server NODE_ENV=production node server.js",
     "start": "npm run dev"
   },
   "repository": {

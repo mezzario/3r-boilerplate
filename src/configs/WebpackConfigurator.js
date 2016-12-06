@@ -210,9 +210,14 @@ function configure(appTarget, nodeEnv) {
                             $("#js-bundle").attr("src", Path.join("/content", mainJsFileName))
 
                             let htmlOutput = $.html()
+                            FileSystem.writeFileSync(`src/${buildClientDir}/${htmlFileName}`, htmlOutput);
 
-                            FileSystem.writeFileSync(`src/${buildClientDir}/${htmlFileName}`, htmlOutput)
-                            FileSystem.createReadStream("src/favicon.ico").pipe(FileSystem.createWriteStream(`src/${buildClientDir}/favicon.ico`))
+                            [
+                                "favicon.ico",
+                                "robots.txt"
+                            ]
+                            .forEach(path => FileSystem.createReadStream(`src/${path}`)
+                                .pipe(FileSystem.createWriteStream(`src/${buildClientDir}/${path}`)))
                         }
                     })
                 }
