@@ -14,21 +14,25 @@
 
         > .block {
             display: inline-block;
-            margin: 0 .5em;
+            margin: 0 1em;
 
             &.credit {
+                color: @gInactiveColor;
                 font-size: .8em;
                 position: relative;
                 top: -.4em;
 
                 > a {
                     color: @gInactiveColor;
+                    //font-family: @font-family-monospace;
+                    text-decoration: none;
 
                     > em {
+                    	font-weight: bold;
                         font-style: normal;
                     }
 
-                    &:hover {
+                    html.no-touchevents &:hover {
                         > em {
                             text-decoration: underline;
                         }

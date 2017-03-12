@@ -13,5 +13,10 @@ module.exports = {
     server: {
         devPort: 3000,
         prodPort: 3005
-    }
+    },
+
+    outputStaticFiles: [
+        "favicon.ico",
+        "robots.txt"
+    ]
 }

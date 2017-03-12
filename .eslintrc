@@ -3,7 +3,7 @@
         "react"
     ],
     "extends": [
-        "eslint:recommended", // https://github.com/eslint/eslint/blob/master/conf/eslint.json
+        "eslint:recommended",
         "plugin:react/recommended"
     ],
     "parser": "babel-eslint",
