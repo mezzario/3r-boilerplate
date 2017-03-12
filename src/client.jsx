@@ -8,6 +8,7 @@ import * as AppStore from "./core/Store"
 import AppHistory from "./core/History"
 const FastClick = require("fastclick")
 import "./content/index.less"
+import "modernizr"
 
 const appStore = AppStore.configure(window.__INITIAL_STATE__)
 const appHistory = ReduxRouter.syncHistoryWithStore(AppHistory, appStore)

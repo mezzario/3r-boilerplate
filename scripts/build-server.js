@@ -1,28 +1,35 @@
 /* eslint-disable no-console */
 
-"use strict"
-
-const Webpack = require("webpack")
 const Chalk = require("chalk")
-const WebpackConfigurator = require("../src/configs/WebpackConfigurator")
+const Commander = require("commander")
 
-let webpackConfig = WebpackConfigurator.configure("server")
-var webpackCompiler = Webpack(webpackConfig)
+Commander
+    .version("0.0.1")
+    .description("Build server's implementation into one file using Webpack.")
+    .option("-b, --build <type>", "build type (only 'development' or 'production')", /^(development|production)$/)
+    .parse(process.argv)
 
-//webpackCompiler.watch(undefined, (error, statsData) => {
-webpackCompiler.run((error, statsData) => {
-    if (error)
-        console.error(Chalk.red(`ERROR:\n${error}\n`))
-    else {
-        let stats = statsData.toJson()
-        //FileSystem.writeFileSync(Path.join(Path.resolve("."), "stats.json"), JSON.stringify(stats, null, "  "), "utf8")
+if (!Commander.build || typeof Commander.build !== "string")
+    Commander.outputHelp()
+else {
+    const webpack = require("webpack")
+    const webpackConfigFn = require("../webpack.config.js")
+    const webpackConfig = webpackConfigFn({ target: "server", build: Commander.build })
+    const webpackCompiler = webpack(webpackConfig)
 
-        if (stats.errors.length)
-            stats.errors.forEach(s => console.error(Chalk.red(`ERROR:\n${s}\n`)))
+    //WebpackCompiler.watch(undefined, (error, statsData) => {
+    webpackCompiler.run((error, statsData) => {
+        if (error)
+            console.error(Chalk.red(`ERROR:\n${error}\n`))
         else {
+            let stats = statsData.toJson()
+            //FileSystem.writeFileSync(Path.join(Path.resolve("."), "stats.json"), JSON.stringify(stats, null, "  "), "utf8")
+
+            stats.errors.forEach(s => console.error(Chalk.red(`ERROR:\n${s}\n`)))
             stats.warnings.forEach(s => console.log(Chalk.dim(`WARNING:\n${s}\n`)))
 
-            console.log(Chalk.green("\nServer has been built successfully.\n"))
+            if (!stats.errors.length)
+                console.log(Chalk.green("\nServer has been built successfully.\n"))
         }
-    }
-})
+    })
+}

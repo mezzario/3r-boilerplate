@@ -1,5 +1,7 @@
 /* eslint-disable no-console */
 
+process.setMaxListeners(0)
+
 import * as Path from "path"
 import * as FileSystem from "fs"
 import * as React from "react"
@@ -17,11 +19,8 @@ const DocumentTitle = require("react-document-title")
 import Routes from "./core/Routes"
 import * as AppStore from "./core/Store"
 import AppHistory from "./core/History"
-import * as WebpackConfigurator from "./configs/WebpackConfigurator"
 const AppConfig = require("./configs/AppConfig")
 import "./content/index.less"
-
-process.setMaxListeners(0)
 
 const appStore = AppStore.configure(
     { // initial test data
@@ -41,10 +40,10 @@ const app = Express()
 app.use(Compression())
 
 if (__DEVELOPMENT__) {
-    const Webpack = require("webpack")
-
-    let webpackConfig = WebpackConfigurator.configure("client", "development")
-    let webpackCompiler = Webpack(webpackConfig)
+    const webpack = require("webpack")
+    const webpackConfigFn = require("../webpack.config.js")
+    const webpackConfig = webpackConfigFn({ target: "client", build: "development" })
+    const webpackCompiler = webpack(webpackConfig)
 
     app.use(require("webpack-dev-middleware")(webpackCompiler, {
         publicPath: webpackConfig.output.publicPath,

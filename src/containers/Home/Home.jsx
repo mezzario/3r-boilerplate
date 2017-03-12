@@ -154,8 +154,8 @@ class Home extends React.Component {
                                     header={
                                         <div className={classNames("ui top attached three basic buttons", Styles.viewSelector)}>
                                             {[ ["", "All", "/"],
-                                               ["active", "Active", "/active"],
-                                               ["completed", "Completed", "/completed"] ]
+                                               ["active", "Active", "/active/"],
+                                               ["completed", "Completed", "/completed/"] ]
                                             .map(pair =>
                                                 <ReactRouter.Link
                                                     key={pair[0]}
@@ -168,7 +168,7 @@ class Home extends React.Component {
                                     footer={
                                         <div className={classNames("ui bottom attached secondary segment", Styles.statusBar)}>
                                             {!this.props.todosLeft
-                                                ? <span><i className="icon-done_all" />All done</span>
+                                                ? <span><i className="icon-all-done" />All done</span>
                                                 : (this.props.todosLeft !== this.props.todosTotal ? `${this.props.todosLeft} of ` : "") + `${this.props.todosTotal} item${this.props.todosTotal > 1 ? "s" : ""} left`}
 
                                             {this.props.todosLeft !== this.props.todosTotal &&
@@ -191,13 +191,13 @@ export default ReactRedux.connect(
         let todos
         let activeTodos = state.todos.filter(todo => !todo.completed)
 
-        switch (ownProps.location.pathname.toLowerCase()) {
-            case "/active":
+        switch (ownProps.location.pathname.toLowerCase().replace(/^\/+|\/+$/g, "")) {
+            case "active":
                 todosView = "active"
                 todos = activeTodos
                 break
 
-            case "/completed":
+            case "completed":
                 todosView = "completed"
                 todos = state.todos.filter((todo) => todo.completed)
                 break
