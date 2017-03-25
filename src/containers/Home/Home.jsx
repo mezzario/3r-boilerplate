@@ -212,7 +212,7 @@ export default ReactRedux.connect(
             todosView,
             todos,
             todosTotal: state.todos.length,
-            todosLeft: activeTodos.length,
+            todosLeft: activeTodos.length
         }
     },
 

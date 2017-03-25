@@ -21,6 +21,7 @@
         "semi": ["warn", "never"],
         "no-console": "warn",
         "no-unused-vars": "warn",
+        "comma-dangle": ["error", "never"],
 
         "react/jsx-uses-react": "warn",
         "react/jsx-uses-vars": "warn",
