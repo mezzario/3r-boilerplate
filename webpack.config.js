@@ -4,6 +4,7 @@ const FileSystem = require("fs")
 const Path = require("path")
 const Webpack = require("webpack")
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
+const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 const Chalk = require("chalk")
 const Cheerio = require("cheerio")
 const AppConfig = require("./src/configs/AppConfig")
@@ -69,7 +70,7 @@ module.exports = function(env) {
 
         entry: choose(
             { "client:development": ["webpack-hot-middleware/client", Path.resolve("src/client")] },
-            { "client:production":  [Path.resolve("src/client")] },
+            { "client:production":  [Path.resolve("src/client.jsx")] },
             { "server:*":           [Path.resolve("src/server.jsx")] }
         ),
 
@@ -212,6 +213,7 @@ module.exports = function(env) {
                 ...commonPlugins,
                 new Webpack.optimize.UglifyJsPlugin(),
                 new ExtractTextPlugin({ filename: "[name].[contenthash].css", allChunks: true }),
+                new OptimizeCssAssetsPlugin(),
                 function() {
                     // replace bundle.css and bundle.js in html with minified versions
                     // and copy html to build/dist folder:
@@ -242,8 +244,8 @@ module.exports = function(env) {
             ] },
             { "server:*": [
                 ...commonPlugins,
-                new Webpack.NormalModuleReplacementPlugin(/modernizr$/i, "node-noop"),
-                new ExtractTextPlugin({ filename: "bundle.css", allChunks: true })
+                new ExtractTextPlugin({ filename: "bundle.css", allChunks: true }),
+                new Webpack.NormalModuleReplacementPlugin(/modernizr$/i, "node-noop")
             ] }
         )
     }

@@ -3,17 +3,27 @@
         "react"
     ],
     "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended"
+        "eslint:recommended", // https://github.com/eslint/eslint/blob/master/conf/eslint.json
+        "plugin:react/recommended",
+        "plugin:import/errors",
+        "plugin:import/warnings"
     ],
     "parser": "babel-eslint",
     "ecmaFeatures": {
-        "modules": true
+        "modules": true,
+        "jsx": true
     },
     "env": {
         "browser": true,
         "node": true,
         "es6": true
+    },
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "extensions": [".js", ".jsx"]
+            }
+        }
     },
     "rules": {
         "quotes": ["error", "double", { "avoidEscape": true, "allowTemplateLiterals": true }],
@@ -22,6 +32,8 @@
         "no-console": "warn",
         "no-unused-vars": "warn",
         "comma-dangle": ["error", "never"],
+
+        "import/no-named-as-default-member": "off",
 
         "react/jsx-uses-react": "warn",
         "react/jsx-uses-vars": "warn",

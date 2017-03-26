@@ -16,7 +16,7 @@ Component | Description
 **[Redux](https://github.com/reactjs/redux)**&nbsp;+&nbsp;**[DevTools](https://github.com/gaearon/redux-devtools)** | Predictable state container, powerful and simple. DevTools supported as [Chrome extension](https://github.com/zalmoxisus/redux-devtools-extension).
 **[React&nbsp;Router](https://github.com/reactjs/react-router)** | Routing that keeps your UI in sync with the URL.
 **[Babel](https://github.com/babel/babel)** | The compiler for writing next generation JavaScript.
-**[Webpack](https://github.com/webpack/webpack)** | Remarkable module bundler.
+**[Webpack 2](https://github.com/webpack/webpack)** | Remarkable module bundler.
 **[LESS](https://github.com/less/less.js)** | CSS pre-processor of choice. Replace with [Sass](https://github.com/sass/sass) / [Stylus](https://github.com/stylus/stylus) / [PostCSS](https://github.com/postcss/postcss), etc, if needed.
 **[Semantic UI](https://github.com/Semantic-Org/Semantic-UI)** | UI component framework based around useful principles from natural language. Replace with [Bootstrap](https://github.com/twbs/bootstrap) / [Foundation](https://github.com/zurb/foundation-sites) / [Pure](https://github.com/yahoo/pure/), etc, if needed.
 **[Local CSS](https://github.com/webpack/css-loader#local-scope)** | Scope CSS to specific elements using auto-generated unique identifiers for class names.
@@ -98,24 +98,29 @@ For production static bundle is generated and saved into `build` folder.
 
 ### Quick start
 
-```
-npm i
-npm start
-```
+`yarn && npm start`
 
-Then browse to [localhost:3000](http://localhost:3000/)
+or
+
+`npm i && npm start`
+
+Then browse to [http://localhost:3000/](http://localhost:3000/)
 
 ### npm scripts
 
 **Lint** | &nbsp;
 :---------- | :-----
 `npm run lint` | Lint project with help of `eslint`.
-**Build & Run** | &nbsp;
-`npm start` | Synonym for `npm run dev`.
-`npm run dev` | Lint, build and run development version of server and client.
-`npm run prod` | Lint, build and run production version of server and client.
+**Clean** | &nbsp;
+`npm run clean` | Remove temporary build folders.
+`npm run clean:server` | Remove temporary build folders for server.
+`npm run clean:client` | Remove temporary build folders for client.
 **Build** | &nbsp;
-`npm run build:server-dev` | Build server development bundle.
+`npm run build:dev` | Build development bundle.
 `npm run build:server-prod` | Build server production bundle.
 `npm run build:client-prod` | Build client production bundle.
 `npm run build:prod` | Build server and client production bundles.
+**Build & Run** | &nbsp;
+`npm run dev` | Build and run development version of server and client.
+`npm run prod` | Build and run production version of server and client.
+`npm start` | Synonym for `npm run dev`.
