@@ -24,33 +24,33 @@ export default class TodoList extends React.Component {
 
     cancelEdit() {
         Object.keys(this._itemComps).forEach(id => {
-            let itemComp = this._itemComps[id]
+            const itemComp = this._itemComps[id]
             if (itemComp)
                 itemComp.setEditMode(false)
         })
     }
 
     render() {
-        let anim = !_firstRender && !__SERVER__
+        const anim = !_firstRender && !__SERVER__
         _firstRender = false
 
         const todos = this.props.todos.length ? this.props.todos : [{ id: 0 }]
         const preset = { stiffness: 300, damping: 30 }
         const itemHeight = 46
 
-        let fixedStyle = { "opacity": 1,                 "height": itemHeight                 }
-        let enterStyle = { "opacity": 0,                 "height": 0                          }
-        let usualStyle = { "opacity": spring(1),         "height": spring(itemHeight, preset) }
-        let leaveStyle = { "opacity": spring(0, preset), "height": spring(0, preset)          }
+        const fixedStyle = { "opacity": 1,                 "height": itemHeight                 }
+        let   enterStyle = { "opacity": 0,                 "height": 0                          }
+        let   usualStyle = { "opacity": spring(1),         "height": spring(itemHeight, preset) }
+        const leaveStyle = { "opacity": spring(0, preset), "height": spring(0, preset)          }
 
         if (!anim) {
             enterStyle = fixedStyle
             usualStyle = fixedStyle
         }
 
-        let getConfigs = style => todos.map(todo => ({ key: String(todo.id), data: todo, style }))
-        let defaultConfigs = getConfigs(enterStyle)
-        let configs = getConfigs(usualStyle)
+        const getConfigs = style => todos.map(todo => ({ key: String(todo.id), data: todo, style }))
+        const defaultConfigs = getConfigs(enterStyle)
+        const configs = getConfigs(usualStyle)
 
         return <TransitionMotion
             defaultStyles={defaultConfigs}
