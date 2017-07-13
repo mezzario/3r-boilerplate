@@ -1,26 +1,47 @@
-import * as React from "react"
-import { Router, Route, IndexRoute } from "react-router"
+import React from "react"
+import PropTypes from "prop-types"
+import {Router, Route, Switch} from "react-router-dom"
 import * as Containers from "../containers"
 
-export default history =>
-    <Router history={history}>
-        <Route path="/" component={Containers.App}>
-            <Route component={Containers.ContentPage}>
-                <IndexRoute component={Containers.Home} onEnter={fixIndexRoute} />
-                <Route path="/active" component={Containers.Home} />
-                <Route path="/completed" component={Containers.Home} />
-                <Route path="*" component={Containers.NotFound} />
-            </Route>
-        </Route>
-    </Router>
+export default () =>
+  <Containers.App>
+    <Containers.ContentPage>
+      <Switch>
+        <Route exact path='/' component={Containers.Home} />
+        <Route path="/active" component={Containers.Home} />
+        <Route path="/completed" component={Containers.Home} />
+        <Route path="*" component={Containers.NotFound} />
+      </Switch>
+    </Containers.ContentPage>
+  </Containers.App>
 
-// remove empty hash from url
-function fixIndexRoute() {
-    if (__CLIENT__ && window.history.replaceState)
-        setTimeout(() => {
-            const re = /#\/*$/
+// StaticRouter extracted from:
+// https://github.com/ReactTraining/react-router/blob/master/packages/react-router/modules/StaticRouter.js
+// and
+// https://gist.github.com/tomatau/9c6011dcb5b9f357368aac2b3a2b1430
+// It is used to separate static history and StaticRouter to be used with "react-router-redux"
+// during server rendering. Remove it when "react-router" is updated.
 
-            if (re.test(window.location.hash))
-                window.history.replaceState(null, null, String(window.location).replace(re, ""))
-        }, 100)
+export class StaticRouter extends React.Component {
+  static propTypes = {
+    history: PropTypes.object,
+  };
+
+  static childContextTypes = {
+    router: PropTypes.object.isRequired,
+  }
+
+  getChildContext() {
+    return {
+      router: {
+        staticContext: this.props.history.context,
+      },
+    }
+  }
+
+  render() {
+    const {history, ...props} = this.props
+
+    return <Router {...props} history={history} />
+  }
 }

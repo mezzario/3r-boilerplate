@@ -1,4 +1,4 @@
-import { createAction } from "redux-actions"
+import {createAction} from "redux-actions"
 
 export const AddTodo = "AddTodo"
 export const addTodo = createAction(AddTodo)

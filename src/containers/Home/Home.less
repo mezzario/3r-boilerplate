@@ -1,67 +1,67 @@
 @import "../../content/globals";
 
 :local(.root) {
-    margin: 0 !important;
-    height: 100%;
+  margin: 0 !important;
+  height: 100%;
 
-    > .column {
-        max-width: 600px;
-    }
+  > .column {
+    max-width: 600px;
+  }
 }
 
 :local(.mainHeader) {
-    font-weight: 500;
-    cursor: default;
-    text-align: left;
+  font-weight: 500;
+  cursor: default;
+  text-align: left;
 
-    > i {
-        //font-size: 1.65rem;
-        position: relative;
-        top: .15em;
-        left: .05em;
-    }
+  > i {
+    //font-size: 1.65rem;
+    position: relative;
+    top: .15em;
+    left: .05em;
+  }
 }
 
 :local(.newTodoInput) {
-    font-weight: 500;
+  font-weight: 500;
 
-    .placeholder({
-        color: @gInactiveColor !important;
-        font-weight: normal;
-    });
+  .placeholder({
+    color: @gInactiveColor !important;
+    font-weight: normal;
+  });
 }
 
 :local(.viewSelector) {
-    margin-top: 1.2rem !important;
+  margin-top: 1.2rem !important;
 
-    .button {
-        //font-weight: 200 !important;
-        //text-transform: uppercase !important;
-        padding-left: .7em;
-        padding-right: .7em;
-    }
+  .button {
+    //font-weight: 200 !important;
+    //text-transform: uppercase !important;
+    padding-left: .7em;
+    padding-right: .7em;
+  }
 }
 
 :local(.statusBar) {
-    padding: .6em 1em !important;
-    font-size: .9em;
-    //color: @gInactiveColor !important;
-    cursor: default;
-    text-align: left;
+  padding: .6em 1em !important;
+  font-size: .9em;
+  //color: @gInactiveColor !important;
+  cursor: default;
+  text-align: left;
 
-    > a {
-        float: right;
+  > a {
+    float: right;
 
-        > i {
-            opacity: .9;
-        }
-
-        &:hover {
-            span {
-                //text-decoration: underline;
-                border-bottom-width: 1px;
-                border-bottom-style: dashed;
-            }
-        }
+    > i {
+      opacity: .9;
     }
+
+    &:hover {
+      span {
+        //text-decoration: underline;
+        border-bottom-width: 1px;
+        border-bottom-style: dashed;
+      }
+    }
+  }
 }

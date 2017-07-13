@@ -1,21 +1,21 @@
 @import "../../content/globals";
 
 :local(.root) {
-    height: 100%;
-    padding: 0 !important;
+  height: 100%;
+  padding: 0 !important;
 
-    > .content-wrapper {
-        min-height: 100%;
-        margin-bottom: -@gFooterHeight;
+  > .content-wrapper {
+    min-height: 100%;
+    margin-bottom: -@gFooterHeight;
 
-        &:after {
-            content: "";
-            display: block;
-            height: @gFooterHeight;
-        }
+    &:after {
+      content: "";
+      display: block;
+      height: @gFooterHeight;
     }
+  }
 
-    > footer {
-        height: @gFooterHeight;
-    }
+  > footer {
+    height: @gFooterHeight;
+  }
 }

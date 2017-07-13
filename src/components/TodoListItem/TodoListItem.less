@@ -3,134 +3,134 @@
 @textFontSize: 1rem;
 
 :local(.root) {
-    position: relative;
-    padding: 0 !important;
-    overflow: hidden;
-    //padding: 1em 4.7em .8em .9em !important;
+  position: relative;
+  padding: 0 !important;
+  overflow: hidden;
+  //padding: 1em 4.7em .8em .9em !important;
 
-    .inline-button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        cursor: pointer;
-        color: @gInactiveColor;
-        margin: 0;
-        padding: .3em;
-        font-size: 1.1em;
+  .inline-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: @gInactiveColor;
+    margin: 0;
+    padding: .3em;
+    font-size: 1.1em;
 
-        &.edit,
-        &.save {
-            right: 2.4em;
-        }
-
-        &.delete,
-        &.cancel {
-            right: .6em;
-        }
-
-        &.edit {
-            font-size: 1.2em;
-            margin-top: .1em;
-        }
-
-        &.edit,
-        &.delete {
-            transition: opacity .3s ease-out;
-            opacity: 0;
-
-            html.touchevents & {
-                opacity: 1;
-            }
-        }
+    &.edit,
+    &.save {
+      right: 2.4em;
     }
 
-    .checkbox-wrapper {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: .9em;
-        right: 5em;
-        text-align: left;
-
-        .checkbox {
-            cursor: pointer;
-            max-width: 100%;
-            position: relative;
-            top: .15em;
-            font-size: @textFontSize;
-
-            label {
-                cursor: pointer !important;
-                font-weight: 500;
-
-                span {
-                    display: inline-block;
-                    width: 100%;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    padding-bottom: .1em;
-                }
-            }
-        }
-    }
-
-    .text-editor {
-        position: absolute !important;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 4.85rem;
-        right: 4.6em;
-
-        .field {
-            padding-left: 1px;
-
-            input {
-                font-weight: 500;
-                padding: .3em .4em .5em .4em !important;
-                //position: relative;
-                //left: -1px;
-                font-size: @textFontSize !important;
-            }
-        }
-    }
-
-    &:hover {
-        .inline-button {
-            &.edit,
-            &.delete {
-                opacity: 1;
-            }
-        }
-    }
-
-    &.completed {
-        .checkbox-wrapper .checkbox {
-            label {
-                color: @gInactiveColor !important;
-                font-weight: normal;
-                font-size: @textFontSize !important;
-            }
-        }
-
-        &.edit {
-            .text-editor .field {
-                input {
-                    font-weight: normal;
-                    font-size: @textFontSize !important;
-                }
-            }
-        }
+    &.delete,
+    &.cancel {
+      right: .6em;
     }
 
     &.edit {
-        .checkbox-wrapper .checkbox {
-            cursor: default;
-
-            input,
-            label {
-                cursor: default !important;
-            }
-        }
+      font-size: 1.2em;
+      margin-top: .1em;
     }
+
+    &.edit,
+    &.delete {
+      transition: opacity .3s ease-out;
+      opacity: 0;
+
+      html.touchevents & {
+        opacity: 1;
+      }
+    }
+  }
+
+  .checkbox-wrapper {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: .9em;
+    right: 5em;
+    text-align: left;
+
+    .checkbox {
+      cursor: pointer;
+      max-width: 100%;
+      position: relative;
+      top: .15em;
+      font-size: @textFontSize;
+
+      label {
+        cursor: pointer !important;
+        font-weight: 500;
+
+        span {
+          display: inline-block;
+          width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding-bottom: .1em;
+        }
+      }
+    }
+  }
+
+  .text-editor {
+    position: absolute !important;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 4.85rem;
+    right: 4.6em;
+
+    .field {
+      padding-left: 1px;
+
+      input {
+        font-weight: 500;
+        padding: .3em .4em .5em .4em !important;
+        //position: relative;
+        //left: -1px;
+        font-size: @textFontSize !important;
+      }
+    }
+  }
+
+  &:hover {
+    .inline-button {
+      &.edit,
+      &.delete {
+        opacity: 1;
+      }
+    }
+  }
+
+  &.completed {
+    .checkbox-wrapper .checkbox {
+      label {
+        color: @gInactiveColor !important;
+        font-weight: normal;
+        font-size: @textFontSize !important;
+      }
+    }
+
+    &.edit {
+      .text-editor .field {
+        input {
+          font-weight: normal;
+          font-size: @textFontSize !important;
+        }
+      }
+    }
+  }
+
+  &.edit {
+    .checkbox-wrapper .checkbox {
+      cursor: default;
+
+      input,
+      label {
+        cursor: default !important;
+      }
+    }
+  }
 }

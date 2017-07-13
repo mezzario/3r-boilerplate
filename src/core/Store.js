@@ -3,36 +3,32 @@ import * as ReduxRouter from "react-router-redux"
 import ReduxThunk from "redux-thunk"
 const ReduxPromise = require("redux-promise")
 import * as Reducers from "../reducers"
+import History from "./History"
 
-function createReducer(reducers) {
-    const reducer = Redux.combineReducers({ ...reducers, routing: ReduxRouter.routerReducer })
-    return reducer
-}
+const createReducer = () => Redux.combineReducers({
+  ...Reducers,
+  routing: ReduxRouter.routerReducer,
+})
 
-export function configure(initialState) {
-    const reducer = createReducer(Reducers)
-    const middlewares = [ReduxThunk, ReduxPromise]
+export default initialState => {
+  const store = Redux.createStore(
+    createReducer(),
+    initialState,
+    Redux.compose(...[
+      Redux.applyMiddleware(...[
+        ReduxRouter.routerMiddleware(History),
+        ReduxThunk,
+        ReduxPromise,
+        ...(__DEVELOPMENT__ ? [require("redux-logger").createLogger({collapsed: true})] : [])
+      ]),
+      // please install https://github.com/zalmoxisus/redux-devtools-extension
+      // chrome extension to use redux dev tools (open Redux tab in Chrome Developer Tools)
+      ...(__CLIENT__ && __DEVELOPMENT__ && window.devToolsExtension ? [window.devToolsExtension()] : [])
+    ])
+  )
 
-    if (__DEVELOPMENT__) {
-        const { createLogger } = require("redux-logger")
-        const logger = createLogger({ collapsed: true })
+  if (__CLIENT__ && __DEVELOPMENT__ && module.hot)
+    module.hot.accept("../reducers", () => store.replaceReducer(createReducer()))
 
-        middlewares.push(logger)
-    }
-
-    const enhancer = Redux.compose(
-        Redux.applyMiddleware(...middlewares),
-        // please install https://github.com/zalmoxisus/redux-devtools-extension
-        // chrome extension to use redux dev tools (open Redux tab in Chrome Developer Tools)
-        __CLIENT__ && __DEVELOPMENT__ && window.devToolsExtension
-            ? window.devToolsExtension() : f => f)
-
-    const store = enhancer(Redux.createStore)(reducer, initialState)
-
-    if (__CLIENT__ && __DEVELOPMENT__ && module.hot)
-        module.hot.accept("../reducers", () => {
-            store.replaceReducer(createReducer(require("../reducers")))
-        })
-
-    return store
+  return store
 }

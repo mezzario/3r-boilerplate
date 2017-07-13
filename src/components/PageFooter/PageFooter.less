@@ -1,44 +1,44 @@
 @import "../../content/globals";
 
 :local(.root) {
-    position: relative;
-    height: @gFooterHeight;
+  position: relative;
+  height: @gFooterHeight;
 
-    > .holder {
-        text-align: center;
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        padding-bottom: .2em;
+  > .holder {
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-bottom: .2em;
 
-        > .block {
-            display: inline-block;
-            margin: 0 1em;
+    > .block {
+      display: inline-block;
+      margin: 0 1em;
 
-            &.credit {
-                color: @gInactiveColor;
-                font-size: .8em;
-                position: relative;
-                top: -.4em;
+      &.credit {
+        color: @gInactiveColor;
+        font-size: .8em;
+        position: relative;
+        top: -.4em;
 
-                > a {
-                    color: @gInactiveColor;
-                    //font-family: @font-family-monospace;
-                    text-decoration: none;
+        > a {
+          color: @gInactiveColor;
+          //font-family: @font-family-monospace;
+          text-decoration: none;
 
-                    > em {
-                    	font-weight: bold;
-                        font-style: normal;
-                    }
+          > em {
+          	font-weight: bold;
+            font-style: normal;
+          }
 
-                    html.no-touchevents &:hover {
-                        > em {
-                            text-decoration: underline;
-                        }
-                    }
-                }
+          html.no-touchevents &:hover {
+            > em {
+              text-decoration: underline;
             }
+          }
         }
+      }
     }
+  }
 }

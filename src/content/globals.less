@@ -3,19 +3,19 @@
 @gFooterHeight: 50px;
 
 .placeholder(@rules) {
-    &::-webkit-input-placeholder { @rules(); }
-    &:-moz-placeholder           { @rules(); }
-    &::-moz-placeholder          { @rules(); }
-    &:-ms-input-placeholder      { @rules(); }
+  &::-webkit-input-placeholder { @rules(); }
+  &:-moz-placeholder           { @rules(); }
+  &::-moz-placeholder          { @rules(); }
+  &:-ms-input-placeholder      { @rules(); }
 }
 
 .clear() {
-    &:after {
-        visibility: hidden;
-        display: block;
-        font-size: 0;
-        content: "";
-        clear: both;
-        height: 0;
-    }
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: "";
+    clear: both;
+    height: 0;
+  }
 }

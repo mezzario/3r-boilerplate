@@ -1,39 +1,39 @@
 .anim-wrapper {
-    position: relative;
+  position: relative;
 }
 
 // fadein on first appear (mount)
 
 .appear-fadein-appear {
-    opacity: 0.01;
+  opacity: 0.01;
 
-    &.appear-fadein-appear-active {
-        opacity: 1;
-        transition: opacity .5s ease-in;
-    }
+  &.appear-fadein-appear-active {
+    opacity: 1;
+    transition: opacity .5s ease-in;
+  }
 }
 
 // fadein on enter / fadeout on leave
 
 .fade-enter {
-    opacity: 0.01;
+  opacity: 0.01;
 
-    &.fade-enter-active {
-        opacity: 1;
-        transition: opacity .25s ease-in;
-    }
+  &.fade-enter-active {
+    opacity: 1;
+    transition: opacity .25s ease-in;
+  }
 }
 
 .fade-leave {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    opacity: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 1;
 
-    &.fade-leave-active {
-        opacity: 0.01;
-        transition: opacity .25s ease-in;
-    }
+  &.fade-leave-active {
+    opacity: 0.01;
+    transition: opacity .25s ease-in;
+  }
 }
