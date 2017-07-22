@@ -7,7 +7,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 const Chalk = require("chalk")
 const Cheerio = require("cheerio")
-const AppConfig = require("./src/configs/AppConfig").default
+const AppConfig = require("./src/configs/AppConfig")
 
 module.exports = function(env) {
   console.info(Chalk.dim(`\nWebpack config requested for ${env.target}/${env.build}.\n`))

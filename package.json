@@ -10,7 +10,7 @@
     "build:dev": "npm run clean && webpack --env.target=server --env.build=development --progress --display-modules && ncp src/~build-server/server.js src/server.js && ncp src/~build-server/server.js.map src/server.js.map && ncp src/~build-server/bundle.css src/content/bundle.css && ncp src/~build-server/bundle.css.map src/content/bundle.css.map",
     "build:server-prod": "npm run clean:server && webpack --env.target=server --env.build=production --progress --display-modules",
     "build:client-prod": "npm run clean:client && webpack --env.target=client --env.build=production --progress --display-modules",
-    "build:prod": "npm run clean && npm run lint && npm run build:server-prod && npm run build:client-prod && mkdir src/build && ncp src/~build-server/server.js src/build/server.js && ncp src/~build-server/server.js.map src/build/server.js.map && ncp src/~build-client/ src/build",
+    "build:prod": "npm run clean && npm run lint && npm run build:server-prod && npm run build:client-prod && mkdirp src/build && ncp src/~build-server/server.js src/build/server.js && ncp src/~build-server/server.js.map src/build/server.js.map && ncp src/~build-client/ src/build",
     "dev": "npm run build:dev && node src/server.js",
     "prod": "npm run build:prod && cd src/build && node server.js",
     "start": "npm run dev"

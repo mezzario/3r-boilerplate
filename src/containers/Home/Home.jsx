@@ -14,8 +14,6 @@ const Modernizr = require("modernizr")
 import AppHistory from "../../core/History"
 const _ = {debounce: require("lodash.debounce")}
 
-// do not make it static class field: "react-transform-hmr" wraps class
-// with proxy and static fields become unavailable
 let _firstRender = true
 
 class Home extends React.Component {
