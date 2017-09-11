@@ -1,15 +1,24 @@
-/* eslint-disable react/prop-types */
-
 import React from "react"
+import PropTypes from "prop-types"
 const shouldPureComponentUpdate = require("react-pure-render/function")
 const classNames = require("classnames")
 const Styles = require("./TodoList.less")
 import {TodoListItem} from "../../components"
-const {spring, TransitionMotion} = require("react-motion")
-
-let _firstRender = true
+import * as Reducers from "../../core/Reducers"
+const CssTransition = require("react-addons-css-transition-group")
 
 export default class TodoList extends React.Component {
+  static propTypes = {
+    todos: PropTypes.arrayOf(Reducers.propTypes.todo).isRequired,
+    emptyMessage: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+    header: PropTypes.node,
+    footer: PropTypes.node,
+
+    deleteTodo: PropTypes.func.isRequired,
+    editTodoText: PropTypes.func.isRequired,
+    setTodoCompletion: PropTypes.func.isRequired,
+  }
+
   _itemComps = {}
 
   constructor(props) {
@@ -31,59 +40,39 @@ export default class TodoList extends React.Component {
   }
 
   render() {
-    const anim = !_firstRender && !__SERVER__
-    _firstRender = false
-
     const todos = this.props.todos.length ? this.props.todos : [{id: 0}]
-    const preset = {stiffness: 300, damping: 30}
-    const itemHeight = 46
 
-    const fixedStyle = {"opacity": 1,                 "height": itemHeight}
-    let   enterStyle = {"opacity": 0,                 "height": 0}
-    let   usualStyle = {"opacity": spring(1),         "height": spring(itemHeight, preset)}
-    const leaveStyle = {"opacity": spring(0, preset), "height": spring(0, preset)}
+    return <div className={classNames(Styles.root)}>
+      {this.props.header}
 
-    if (!anim) {
-      enterStyle = fixedStyle
-      usualStyle = fixedStyle
-    }
+      <CssTransition
+        component="div"
+        className={classNames(Styles.root, "anim-wrapper ui attached")}
+        transitionName="switch"
+        transitionEnterTimeout={300}
+        transitionLeaveTimeout={300}
+      >
+        {todos.map(todo =>
+          todo.id
+            ? <TodoListItem
+              key={todo.id}
+              todo={todo}
+              ref={ref => this._itemComps[todo.id] = ref}
+              onBeforeEdit={() => this.cancelEdit()}
+              deleteTodo={this.props.deleteTodo}
+              editTodoText={this.props.editTodoText}
+              setTodoCompletion={this.props.setTodoCompletion}
+            />
+            : <div key={0} className={classNames(Styles.emptyMessage, "ui attached segment")}>
+              {this.props.emptyMessage
+                ? (typeof this.props.emptyMessage === "string"
+                  ? this.props.emptyMessage
+                  : this.props.emptyMessage())
+                : "empty"}
+            </div>)}
+      </CssTransition>
 
-    const getConfigs = style => todos.map(todo => ({key: String(todo.id), data: todo, style}))
-    const defaultConfigs = getConfigs(enterStyle)
-    const configs = getConfigs(usualStyle)
-
-    return <TransitionMotion
-      defaultStyles={defaultConfigs}
-      styles={configs}
-      willEnter={() => enterStyle}
-      willLeave={() => Object.assign({}, leaveStyle, {"borderBottom": 0})}>
-
-      {configs =>
-        <div className={Styles.root}>
-          {this.props.header}
-
-          {configs.map(({key, data: todo, style}) =>
-            todo.id
-              ? <TodoListItem
-                key={key}
-                todo={todo}
-                style={style}
-                ref={ref => this._itemComps[key] = ref}
-                onBeforeEdit={() => this.cancelEdit()}
-                deleteTodo={this.props.deleteTodo}
-                editTodoText={this.props.editTodoText}
-                setTodoCompletion={this.props.setTodoCompletion}
-              />
-              : <div key={key} style={style} className={classNames("ui attached segment", Styles.emptyMessage)}>
-                <div>{this.props.emptyMessage
-                  ? (typeof this.props.emptyMessage === "string"
-                    ? this.props.emptyMessage
-                    : (this.props.emptyMessage)())
-                  : "empty"}</div>
-              </div>)}
-
-          {this.props.footer}
-        </div>}
-    </TransitionMotion>
+      {this.props.footer}
+    </div>
   }
 }

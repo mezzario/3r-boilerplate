@@ -1,14 +1,17 @@
 import * as ReduxActions from "redux-actions"
 import * as Action from "../core/Actions"
+import PropTypes from "prop-types"
 
-export default ReduxActions.handleActions({
+export {routerReducer as routing} from "react-router-redux"
+
+export const todos = ReduxActions.handleActions({
   [Action.AddTodo]: (state, action) => {
     let nextId = (state.length > 0 ? Math.max.apply(null, state.map(o => o.id)) : 0) + 1
 
     return [
       ...(Array.isArray(action.payload) ? action.payload : [action.payload])
         .map(text => ({id: nextId++, text, completed: false})),
-      ...state
+      ...state,
     ]
   },
 
@@ -29,3 +32,11 @@ export default ReduxActions.handleActions({
     state.filter(todo => !todo.completed),
 
 }, [])
+
+export const propTypes = {
+  todo: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+    completed: PropTypes.bool.isRequired,
+  }),
+}

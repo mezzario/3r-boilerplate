@@ -41,7 +41,7 @@ module.exports = function(env) {
         ),
       },
     },
-    "postcss-loader"
+    "postcss-loader",
   ]
 
   const commonPlugins = [
@@ -57,8 +57,14 @@ module.exports = function(env) {
         {"*:production": false},
         {"*":            true}
       ),
-    })
+    }),
   ]
+
+  const commonsChunkConfig = {
+    name: "vendor",
+    filename: "vendor-bundle.js",
+    minChunks: module => module.context && module.context.indexOf("node_modules") !== -1,
+  }
 
   return {
     target: choose(
@@ -76,7 +82,7 @@ module.exports = function(env) {
       {"client:development": [
         "webpack-hot-middleware/client?reload=true",
         "react-hot-loader/patch",
-        Path.resolve("src/client.jsx")
+        Path.resolve("src/client.jsx"),
       ]},
       {"client:production":  [Path.resolve("src/client.jsx")]},
       {"server:*":           [Path.resolve("src/server.jsx")]}
@@ -85,7 +91,7 @@ module.exports = function(env) {
     output: choose(
       {"client:development": {
         path: Path.resolve("."),
-        filename: "bundle.js",
+        filename: "main-bundle.js",
         pathinfo: true,
         publicPath: "/content/",
       }},
@@ -119,8 +125,7 @@ module.exports = function(env) {
       rules: [
         {
           test: /\.jsx?$/i,
-          exclude: /node_modules/,
-          include: Path.resolve("."),
+          include: Path.resolve("src"),
           use: "babel-loader",
         }, {
           test: /\.css$/i,
@@ -167,7 +172,7 @@ module.exports = function(env) {
                   speed: 3,
                 },
               },
-            }
+            },
           ],
         },
 
@@ -177,7 +182,7 @@ module.exports = function(env) {
         {test: /\.woff2$/i, loader: "url-loader", query: {limit: inlineFileSizeLimit, mimetype: "application/font-woff2"}},
         {test: /\.svg$/i,   loader: "url-loader", query: {limit: inlineFileSizeLimit, mimetype: "image/svg+xml"}},
 
-        {test: /\.modernizrrc$/i, use: ["modernizr-loader", "json-loader"]}
+        {test: /\.modernizrrc$/i, use: ["modernizr-loader", "json-loader"]},
       ],
     },
 
@@ -193,31 +198,36 @@ module.exports = function(env) {
         ...commonPlugins,
         new Webpack.HotModuleReplacementPlugin(),
         new Webpack.NamedModulesPlugin(),
-        new Webpack.NoEmitOnErrorsPlugin()
+        new Webpack.NoEmitOnErrorsPlugin(),
+        new Webpack.optimize.CommonsChunkPlugin(commonsChunkConfig),
       ]},
       {"client:production": [
         ...commonPlugins,
+        new Webpack.optimize.CommonsChunkPlugin(Object.assign({}, commonsChunkConfig, {
+          filename: "[name].[id].[hash].js",
+        })),
         new Webpack.optimize.ModuleConcatenationPlugin(),
         new Webpack.optimize.UglifyJsPlugin(),
+        new Webpack.optimize.OccurrenceOrderPlugin(),
         new ExtractTextPlugin({filename: "[name].[contenthash].css", allChunks: true}),
         new OptimizeCssAssetsPlugin(),
         function() {
-          // replace bundle.css and bundle.js in html with minified versions
+          // replace content bundles in html with minified versions
           // and copy html to build/dist folder:
 
           this.plugin("done", statsData => {
             let stats = statsData.toJson()
+            // uncomment if you need to save stats file and inspect it
             //FileSystem.writeFileSync(Path.resolve("stats.json"), JSON.stringify(stats, null, "  "), "utf8")
 
             if (!stats.errors.length) {
               let htmlFileName = "index.html"
               let html = FileSystem.readFileSync(Path.resolve("src", htmlFileName), "utf8")
-              let mainCssFileName = stats.assetsByChunkName["main"].find(s => !!s.match(/\.css$/i))
-              let mainJsFileName = stats.assetsByChunkName["main"].find(s => !!s.match(/\.js$/i))
               let $ = Cheerio.load(html)
 
-              $("#css-bundle").attr("href", Path.join("/content", mainCssFileName))
-              $("#js-bundle").attr("src", Path.join("/content", mainJsFileName))
+              $("#css-bundle-main" ).attr("href", Path.join("/content", stats.assetsByChunkName["main"].find(s => !!s.match(/\.css$/i))))
+              $("#js-bundle-vendor").attr("src",  Path.join("/content", stats.assetsByChunkName["main"].find(s => !!s.match(/\.js$/i))))
+              $("#js-bundle-main"  ).attr("src",  Path.join("/content", stats.assetsByChunkName["vendor"]))
 
               let htmlOutput = $.html()
               FileSystem.writeFileSync(`src/${buildClientDir}/${htmlFileName}`, htmlOutput)
@@ -227,12 +237,12 @@ module.exports = function(env) {
                   .pipe(FileSystem.createWriteStream(`src/${buildClientDir}/${path}`)))
             }
           })
-        }
+        },
       ]},
       {"server:*": [
         ...commonPlugins,
-        new ExtractTextPlugin({filename: "bundle.css", allChunks: true}),
-        new Webpack.NormalModuleReplacementPlugin(/modernizr$/i, "node-noop")
+        new ExtractTextPlugin({filename: "main-bundle.css", allChunks: true}),
+        new Webpack.NormalModuleReplacementPlugin(/modernizr$/i, "node-noop"),
       ]}
     ),
   }

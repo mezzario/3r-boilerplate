@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import {Router, Route, Switch} from "react-router-dom"
-import * as Containers from "../containers"
+import * as Containers from "../components"
 
 export default () =>
   <Containers.App>

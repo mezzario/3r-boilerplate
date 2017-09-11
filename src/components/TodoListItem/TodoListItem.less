@@ -1,5 +1,6 @@
 @import "../../content/globals";
 
+@height: 46px;
 @textFontSize: 1rem;
 
 :local(.root) {
@@ -7,6 +8,7 @@
   padding: 0 !important;
   overflow: hidden;
   //padding: 1em 4.7em .8em .9em !important;
+  height: @height;
 
   .inline-button {
     position: absolute;
@@ -92,6 +94,31 @@
         //left: -1px;
         font-size: @textFontSize !important;
       }
+    }
+  }
+
+  &:first-child {
+    border-top-width: 0 !important;
+  }
+
+  &.switch-enter {
+    opacity: 0.01;
+    height: 0;
+
+    &.switch-enter-active {
+      opacity: 1;
+      height: @height;
+      transition: all .25s ease-in-out;
+      transition-property: opacity, height;
+    }
+  }
+
+  &.switch-leave {
+    &.switch-leave-active {
+      opacity: 0.01;
+      height: 0;
+      transition: all .25s ease-in-out;
+      transition-property: opacity, height;
     }
   }
 

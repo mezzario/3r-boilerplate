@@ -5,5 +5,8 @@
     "react"
   ],
   "compact": false,
-  "plugins": ["react-hot-loader/babel"]
+  "plugins": [
+    "transform-async-to-generator",
+    "react-hot-loader/babel"
+  ]
 }

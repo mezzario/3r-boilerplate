@@ -1,11 +1,8 @@
 module.exports = {
-  getTitle: pageTitle => {
-    const mainTitle = "Todo"
-    let title = mainTitle
-    if (pageTitle)
-      title = `${pageTitle} · ${mainTitle}`
-    return title
-  },
+  getTitle: title => [
+    ...Array.isArray(title) ? title : (title ? [title] : []).reverse(),
+    "Todo",
+  ].join(" · "),
 
   // set true to render pages on server
   universal: true,
@@ -16,7 +13,9 @@ module.exports = {
   },
 
   outputStaticFiles: [
+    "browserconfig.xml",
     "favicon.ico",
-    "robots.txt"
+    "manifest.json",
+    "robots.txt",
   ],
 }

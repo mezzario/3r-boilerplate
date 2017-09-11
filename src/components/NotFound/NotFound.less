@@ -1,0 +1,35 @@
+@import "../../content/globals";
+
+:local(.root) {
+  color: #888;
+  text-align: center;
+  width: 100%;
+  min-height: ~"calc(100vh - 50px)";
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .body {
+    .header {
+      font-size: 1.5rem;
+      font-weight: 300;
+      padding-bottom: 1rem;
+    }
+
+    .p {
+      margin: 0 auto;
+      width: 280px;
+    }
+
+    .links {
+      padding-top: 3rem;
+      position: relative;
+      left: -.6rem;
+      font-size: 2rem;
+
+      > a {
+        padding: 1rem;
+      }
+    }
+  }
+}

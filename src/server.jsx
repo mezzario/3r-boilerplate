@@ -26,7 +26,7 @@ const _store = Store(
       {id: 1, text: "Watch movie from favorites", completed: false},
       {id: 2, text: "Call Alice tomorrow afternoon", completed: true},
       {id: 3, text: "Buy gifts for colleagues", completed: false},
-      {id: 4, text: "Apply for a new job", completed: false}
+      {id: 4, text: "Apply for a new job", completed: false},
     ],
   }
 )

@@ -17,19 +17,24 @@
 
     <title></title>
 
-    <link href="/content/bundle.css" rel="stylesheet" id="css-bundle" />
-    <link rel="icon" href="/favicon.ico" />
+    <link href="/content/main-bundle.css" rel="stylesheet" id="css-bundle-main" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/content/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/content/favicons/favicon-32x32.png?v=3">
+    <link rel="icon" type="image/png" sizes="16x16" href="/content/favicons/favicon-16x16.png?v=3">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#ffffff">
 </head>
 
 <body>
     <div id="root">
-        <div class="loader" style="width: 100px; height: 50px; line-height: 50px; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; font-size: 20px; color: #ccc; font-family: arial; white-space: nowrap;">
-            <script>document.write("Loading...")</script>
-            <noscript>JavaScript is disabled :-(</noscript>
+        <div class="loader" style="height: 50px; line-height: 50px; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; font-size: 24px; font-family: helvetica, arial; white-space: nowrap; font-weight: 100; text-align: center; color: #ccc">
+            <script>document.write("⏳")</script>
+            <noscript>no JavaScript 😞</noscript>
         </div>
     </div>
 
-    <script src="/content/bundle.js" id="js-bundle"></script>
+    <script src="/content/vendor-bundle.js" id="js-bundle-main"></script>
+    <script src="/content/main-bundle.js" id="js-bundle-vendor"></script>
 </body>
 
 </html>

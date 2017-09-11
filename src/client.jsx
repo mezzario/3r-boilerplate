@@ -1,4 +1,4 @@
-import "core-js"
+import "babel-polyfill"
 import React from "react"
 import ReactDOM from "react-dom"
 import * as ReactRedux from "react-redux"
@@ -30,7 +30,7 @@ render()
 
 if (__DEVELOPMENT__) {
   // remove server css bundle to not interfere with styles applied by webpack's style-loader
-  const cssBundleElem = document.getElementById("css-bundle")
+  const cssBundleElem = document.getElementById("css-bundle-main")
   cssBundleElem.parentNode.removeChild(cssBundleElem)
 
   if (module.hot)

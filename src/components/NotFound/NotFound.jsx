@@ -23,9 +23,9 @@ export default class NotFound extends React.Component {
     return <DocumentTitle title={AppConfig.getTitle("404")}>
       <div className={Styles.root}>
         <div className="body">
-          <div className="header">Page Not Found</div>
+          <div className="header">Page not found</div>
           <div className="p">Sorry, but the page you were trying to view does not exist.</div>
-          <div className="links"><ReactRouter.Link to="/">&larr; Back to Home Page</ReactRouter.Link></div>
+          <div className="links"><ReactRouter.Link to="/">🏠</ReactRouter.Link></div>
         </div>
       </div>
     </DocumentTitle>

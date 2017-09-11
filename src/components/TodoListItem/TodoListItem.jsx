@@ -1,11 +1,21 @@
-/* eslint-disable react/prop-types */
-
 import React from "react"
+import PropTypes from "prop-types"
 const shouldPureComponentUpdate = require("react-pure-render/function")
 const classNames = require("classnames")
 const Styles = require("./TodoListItem.less")
+import * as Reducers from "../../core/Reducers"
 
 export default class TodoListItem extends React.Component {
+  static propTypes = {
+    todo: Reducers.propTypes.todo,
+    style: PropTypes.object,
+
+    onBeforeEdit: PropTypes.func,
+    deleteTodo: PropTypes.func.isRequired,
+    editTodoText: PropTypes.func.isRequired,
+    setTodoCompletion: PropTypes.func.isRequired,
+  }
+
   constructor(props) {
     super(props)
 

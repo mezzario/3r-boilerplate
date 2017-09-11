@@ -5,17 +5,38 @@
 }
 
 :local(.emptyMessage) {
+  @height: 46px;
+
   color: @gInactiveColor !important;
   font-style: italic;
   text-align: center;
   overflow: hidden;
-  padding: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: @height;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  height: @height;
+  border-top-width: 0 !important;
 
-  > div {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
+  &.switch-enter {
+    opacity: 0.01;
+    height: 0;
+
+    &.switch-enter-active {
+      opacity: 1;
+      height: @height;
+      transition: all .25s ease-in-out;
+      transition-property: opacity, height;
+    }
+  }
+
+  &.switch-leave {
+    &.switch-leave-active {
+      opacity: 0.01;
+      height: 0;
+      transition: all .25s ease-in-out;
+      transition-property: opacity, height;
+    }
   }
 }
