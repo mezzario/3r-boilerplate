@@ -54,8 +54,8 @@ class Home extends React.Component {
   }
 
   handleNewTodoKeyDown(e) {
-    let input = e.target
-    let text = input.value.trim()
+    const input = e.target
+    const text = input.value.trim()
 
     if (e.which === 13 && text) {
       this.props.addTodo(text)
@@ -82,10 +82,10 @@ class Home extends React.Component {
       if (!byText)
         filteredTodos = todos
       else {
-        let parts = byText.split(" ")
+        const parts = byText.split(" ")
 
         filteredTodos = todos.filter(todo => {
-          let todoText = todo.text.toLocaleLowerCase().trim()
+          const todoText = todo.text.toLocaleLowerCase().trim()
           return parts.every(part => todoText.indexOf(part) >= 0)
         })
       }
@@ -107,9 +107,9 @@ class Home extends React.Component {
   }
 
   render() {
-    return <div className={classNames("ui stackable centered grid", Styles.root)}>
+    return <div className={classNames(Styles.root, "ui stackable centered grid")}>
       <div className="column">
-        <h2 className={classNames("ui header orange", Styles.mainHeader)}><i className="icon-checklist" /> todos</h2>
+        <h2 className={classNames(Styles.mainHeader, "ui header orange")}><i className="icon-checklist" /> todos</h2>
 
         <div className="ui form">
           <div className="field">
@@ -145,7 +145,7 @@ class Home extends React.Component {
               editTodoText={this.props.editTodoText}
               setTodoCompletion={this.props.setTodoCompletion}
               header={
-                <div className={classNames("ui top attached three basic buttons", Styles.viewSelector)}>
+                <div className={classNames(Styles.viewSelector, "ui top attached three basic buttons")}>
                   {[["", "All", "/"],
                     ["active", "Active", "/active/"],
                     ["completed", "Completed", "/completed/"]]
@@ -159,7 +159,7 @@ class Home extends React.Component {
                 </div>
               }
               footer={
-                <div className={classNames("ui bottom attached secondary segment", Styles.statusBar)}>
+                <div className={classNames(Styles.statusBar, "ui bottom attached secondary segment")}>
                   {!this.props.todosLeft
                     ? <span><i className="icon-all-done" />All done</span>
                     : (this.props.todosLeft !== this.props.todosTotal ? `${this.props.todosLeft} of ` : "") + `${this.props.todosTotal} item${this.props.todosTotal > 1 ? "s" : ""} left`}

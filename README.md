@@ -22,6 +22,7 @@ Component | Description
 **[Local CSS](https://github.com/webpack/css-loader#local-scope)** | Scope CSS to specific elements using auto-generated unique identifiers for class names.
 **[Autoprefixer](https://github.com/postcss/autoprefixer)** | Auto-generate vendor prefixes for CSS rules.
 **[React&nbsp;Hot&nbsp;Loader](https://github.com/gaearon/react-hot-loader)** | Tweak React components in real time.
+**[React Helmet](https://github.com/nfl/react-helmet)** | A document head manager for React.
 **[Express](https://github.com/expressjs/express)** | Fast, unopinionated, minimalist web framework for node.
 **[Node.js](https://github.com/nodejs/node)** | JavaScript runtime. An ecosystem for most parts of the app.
 
@@ -58,13 +59,11 @@ Boilerplate include minimum configuration and components to get you started quic
 <br/><br/>
 * **Reducers**
 <br/><br/>
-* **UI containers**
-    * [`App`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/App/App.jsx): main application container. Hosts other containers.
-    * [`Home`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/Home/Home.jsx): "index" container for application.
-    * [`NotFound`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/NotFound/NotFound.jsx): container to show "Page Not Found" message to user.
-    * [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.jsx): optional container to render header and sticky footer.
-<br/><br/>
 * **UI components**
+    * [`App`](https://github.com/mezzario/3r-boilerplate/blob/master/src/components/App/App.jsx): main application container. Hosts other containers.
+    * [`Home`](https://github.com/mezzario/3r-boilerplate/blob/master/src/components/Home/Home.jsx): "index" container for application.
+    * [`NotFound`](https://github.com/mezzario/3r-boilerplate/blob/master/src/components/NotFound/NotFound.jsx): container to show "Page Not Found" message to user.
+    * [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/components/ContentPage/ContentPage.jsx): optional container to render header and sticky footer.
     * [`PageHeader`](https://github.com/mezzario/3r-boilerplate/blob/master/src/components/PageHeader/PageHeader.jsx), [`PageFooter`](https://github.com/mezzario/3r-boilerplate/blob/master/src/components/PageFooter/PageFooter.jsx): app's common page header and sticky footer. Do not add directly. Instead, use [`ContentPage`](https://github.com/mezzario/3r-boilerplate/blob/master/src/containers/ContentPage/ContentPage.jsx) container as a host.
 
 ## Overview
@@ -98,11 +97,17 @@ For production static bundle is generated and saved into `build` folder.
 
 ### Quick start
 
-`yarn && npm start`
+```
+yarn
+yarn start
+````
 
 or
 
-`npm i && npm start`
+```
+npm i
+npm start
+````
 
 Then browse to [http://localhost:3000/](http://localhost:3000/)
 

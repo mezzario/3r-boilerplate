@@ -1,99 +1,131 @@
-/* eslint-disable no-console */
-
-process.setMaxListeners(0)
-
-import * as Path from "path"
-import * as FileSystem from "fs"
 import React from "react"
 const ReactDOMServer = require("react-dom/server")
-import * as ReactRedux from "react-redux"
 const Express = require("express")
 const Compression = require("compression")
-const ServeFavicon = require("serve-favicon")
-const Cheerio = require("cheerio")
 const Chalk = require("chalk")
-const DocumentTitle = require("react-document-title")
-
-import History from "./core/History"
+import * as ReactRedux from "react-redux"
 import Routes, {StaticRouter} from "./core/Routes"
+import History from "./core/History"
 import Store from "./core/Store"
 import AppConfig from "./configs/AppConfig"
+import Helmet from "react-helmet"
+import {Html, HelmetRoot} from "./components"
+import * as FileSystem from "fs-extra"
 import "./content/index.less"
 
-const _store = Store(
-  { // initial test data
-    todos: [
-      {id: 1, text: "Watch movie from favorites", completed: false},
-      {id: 2, text: "Call Alice tomorrow afternoon", completed: true},
-      {id: 3, text: "Buy gifts for colleagues", completed: false},
-      {id: 4, text: "Apply for a new job", completed: false},
-    ],
-  }
-)
+const app = Express()
+app.use(Compression())
 
-const _appPort = __DEVELOPMENT__ ? AppConfig.server.devPort : AppConfig.server.prodPort
-const _app = Express()
-
-_app.use(Compression())
+let webpackFinished = !__DEVELOPMENT__
 
 if (__DEVELOPMENT__) {
   const webpack = require("webpack")
-  const webpackConfigFn = require("../webpack.config.js")
-  const webpackConfig = webpackConfigFn({target: "client", build: "development"})
-  const webpackCompiler = webpack(webpackConfig)
+  const webpackConfigModule = require("../webpack.config.babel.js")
+  const webpackConfigure = webpackConfigModule.default
+  const webpackConfig = webpackConfigure({target: "client", build: "development"})
+  const webpackCompiler = webpack(webpackConfig, () => webpackFinished = true)
 
-  _app.use(require("webpack-dev-middleware")(webpackCompiler, {
+  app.use(require("webpack-dev-middleware")(webpackCompiler, {
     publicPath: webpackConfig.output.publicPath,
     hot: true,
     stats: {colors: true},
   }))
 
-  _app.use(require("webpack-hot-middleware")(webpackCompiler))
-
-  // main server part should be executed side by side with html and static resources
-  process.chdir("src")
+  app.use(require("webpack-hot-middleware")(webpackCompiler))
 }
 
-_app.use(ServeFavicon(Path.resolve("favicon.ico")))
+const publicDir = "src/build/public"
+FileSystem.ensureDirSync(publicDir)
+process.chdir(publicDir)
 
-if (!AppConfig.universal)
-  _app.use(Express.static(Path.resolve(".")))
-else {
-  _app.use("/content", Express.static(Path.resolve("content")))
+const staticMiddleware = Express.static(".")
+const outputStaticFiles = AppConfig.outputStaticFiles.map(s => `/${s.toLowerCase()}`)
 
-  _app.use((req, res) => {
-    History._init("", req.url)
+app.use((req, res, next) => {
+  const url = req.url.toLowerCase()
 
-    let contentHtml = ReactDOMServer.renderToString(
-      <ReactRedux.Provider store={_store}>
+  if (url.startsWith("/content/") || outputStaticFiles.includes(url))
+    return staticMiddleware(req, res, next)
+
+  next()
+})
+
+let webpackAssetsJsonStr, webpackAssets
+
+app.use((req, res) => {
+  if (!webpackFinished) {
+    res.status(202)
+    res.send("Waiting for Webpack to finish compilation.")
+    return
+  }
+
+  History._init("", req.url)
+
+  // non-universal app manage history using hash url
+  if (!AppConfig.universal && req.url !== "/")
+    History.replace("/")
+
+  // handle "push" or "replace" of url
+  if (History.context.url != null) {
+    res.redirect(302, History.context.url)
+    return
+  }
+
+  const store = Store({
+    todos: [ // initial test data
+      {id: 1, text: "Watch movie from favorites",    completed: false},
+      {id: 2, text: "Call Alice tomorrow afternoon", completed: true},
+      {id: 3, text: "Buy gifts for colleagues",      completed: false},
+      {id: 4, text: "Apply for a new job",           completed: false},
+    ],
+    routing: {
+      location: History.location,
+    },
+  })
+
+  let markup
+
+  if (AppConfig.universal) {
+    markup = ReactDOMServer.renderToString(
+      <ReactRedux.Provider store={store}>
         <StaticRouter history={History}>
           <Routes />
         </StaticRouter>
       </ReactRedux.Provider>
     )
 
-    if (History.context.url != null) {
-      res.redirect(302, History.context.url)
-    } else {
-      let html = FileSystem.readFileSync("index.html", "utf8")
-      let $ = Cheerio.load(html)
-      let initialState = {..._store.getState()}
+    if (__DEVELOPMENT__)
+      ReactDOMServer.renderToString( // prevent css flickering for dev env
+        <Helmet>
+          <link id="css-bundle-main" href="/content/main-bundle.css" rel="stylesheet" />
+        </Helmet>
+      )
+  }
+  else
+    ReactDOMServer.renderToStaticMarkup(<HelmetRoot />)
 
-      delete initialState.routing
+  if (!webpackAssetsJsonStr) {
+    webpackAssetsJsonStr = FileSystem.readFileSync(`../assets.json`, "utf8")
+    webpackAssets = JSON.parse(webpackAssetsJsonStr)
+  }
 
-      $("title").text(DocumentTitle.rewind())
-      $("head").append(`<script>window.__INITIAL_STATE__ = ${JSON.stringify(initialState)}</script>`)
-      $("#root").empty().append(contentHtml)
-      html = $.html()
+  const htmlElem = <Html
+    helmet={Helmet.renderStatic()}
+    state={store.getState()}
+    markup={markup}
+    webpackAssets={webpackAssets}
+  />
 
-      res
-        .status(History.context.pageNotFound ? 404 : 200)
-        .send(html)
-    }
-  })
-}
+  const html = AppConfig.universal
+    ? ReactDOMServer.renderToString(htmlElem)
+    : ReactDOMServer.renderToStaticMarkup(htmlElem)
 
-_app.listen(_appPort, "localhost", err => {
-  err ? console.error(Chalk.red(err))
-    : console.info(Chalk.dim(`\nlistening at http://localhost:${_appPort}\n`))
+  res.status(History.context.pageNotFound ? 404 : 200)
+  res.send(html)
 })
+
+const appPort = __DEVELOPMENT__ ? AppConfig.server.devPort : AppConfig.server.prodPort
+
+app.listen(appPort, "localhost", err => err
+  ? console.error(Chalk.red(err))
+  : console.info(Chalk.dim(`\nlistening at http://localhost:${appPort}\n`)))

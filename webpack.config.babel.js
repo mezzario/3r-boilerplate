@@ -1,20 +1,24 @@
-/* eslint-disable no-console */
-
-const FileSystem = require("fs")
-const Path = require("path")
+import * as FileSystem from "fs-extra"
+import * as Path from "path"
 const Webpack = require("webpack")
 const ExtractTextPlugin = require("extract-text-webpack-plugin")
 const OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 const Chalk = require("chalk")
-const Cheerio = require("cheerio")
-const AppConfig = require("./src/configs/AppConfig")
+import AppConfig from "./src/configs/AppConfig"
+import Helmet from "react-helmet"
+import Html from "./src/components/Html/Html.jsx"
+import HelmetRoot from "./src/components/HelmetRoot/HelmetRoot.jsx"
+import React from "react"
+const ReactDOMServer = require("react-dom/server")
+import getWebpackAssets from "./src/modules/webpack-assets"
 
-module.exports = function(env) {
+const inlineFileSizeLimit = 16384
+const rootDir = Path.resolve(".").replace(/\/+$/, "")
+const buildServerDir = `${rootDir}/src/build`
+const buildClientDir = `${rootDir}/src/build/public`
+
+export default function configure(env) {
   console.info(Chalk.dim(`\nWebpack config requested for ${env.target}/${env.build}.\n`))
-
-  const inlineFileSizeLimit = 16384
-  const buildServerDir = "~build-server"
-  const buildClientDir = "~build-client"
 
   function choose(...entries) {
     const def = "*"
@@ -44,6 +48,19 @@ module.exports = function(env) {
     "postcss-loader",
   ]
 
+  function getCssRule(...extraLoaders) {
+    const extractPlugin = ExtractTextPlugin.extract({
+      fallback: cssLoaders[0],
+      use: cssLoaders.slice(1).concat(extraLoaders),
+    })
+
+    return choose(
+      {"client:development": cssLoaders.concat(extraLoaders)},
+      {"server:development": AppConfig.universal ? extractPlugin : "ignore-loader"},
+      {"*": extractPlugin}
+    )
+  }
+
   const commonPlugins = [
     new Webpack.DefinePlugin({
       "process.env.NODE_ENV": `"${env.build}"`,
@@ -53,10 +70,15 @@ module.exports = function(env) {
       __PRODUCTION__:  env.build  === "production",
     }),
     new Webpack.LoaderOptionsPlugin({
-      debug: choose(
-        {"*:production": false},
-        {"*":            true}
+      debug: env.target === "development",
+    }),
+    new ExtractTextPlugin({
+      filename: choose(
+        {"server:development": Path.relative(buildServerDir, `${buildClientDir}/content/main-bundle.css`)},
+        {"server:production":  Path.relative(buildServerDir, `${buildClientDir}/content/[name].[contenthash].css`)},
+        {"*":                  "[name].[contenthash].css"}
       ),
+      allChunks: true,
     }),
   ]
 
@@ -66,7 +88,7 @@ module.exports = function(env) {
     minChunks: module => module.context && module.context.indexOf("node_modules") !== -1,
   }
 
-  return {
+  const config = {
     target: choose(
       {"client:*": "web"},
       {"server:*": "node"}
@@ -82,36 +104,36 @@ module.exports = function(env) {
       {"client:development": [
         "webpack-hot-middleware/client?reload=true",
         "react-hot-loader/patch",
-        Path.resolve("src/client.jsx"),
+        `${rootDir}/src/client.jsx`,
       ]},
-      {"client:production":  [Path.resolve("src/client.jsx")]},
-      {"server:*":           [Path.resolve("src/server.jsx")]}
+      {"client:production": [`${rootDir}/src/client.jsx`]},
+      {"server:*":          [`${rootDir}/src/server.jsx`]}
     ),
 
     output: choose(
-      {"client:development": {
-        path: Path.resolve("."),
-        filename: "main-bundle.js",
-        pathinfo: true,
-        publicPath: "/content/",
-      }},
-      {"client:production": {
-        path: Path.resolve("src", buildClientDir, "content"),
-        filename: "[name].[hash].js",
-        chunkFilename: "[name].[id].[chunkhash].js",
+      {"client:*": {
+        path: `${buildClientDir}/content`,
+        filename: choose(
+          {"*:development": "main-bundle.js"},
+          {"*:production":  "[name].[hash].js"},
+        ),
+        chunkFilename: choose(
+          {"*:development": undefined},
+          {"*:production":  "[name].[id].[chunkhash].js"},
+        ),
+        pathinfo: env.build === "development",
         publicPath: "/content/",
       }},
       {"server:*": {
-        path: Path.resolve("src", buildServerDir),
-        pathinfo: true,
+        path: buildServerDir,
         filename: "server.js",
-        publicPath: "/content/",
+        pathinfo: true,
       }}
     ),
 
     externals: choose(
       {"server:*": (() => {
-        let nodeModules = {}
+        const nodeModules = {}
         FileSystem.readdirSync("node_modules")
           .filter(s => [".bin", ".ds_store"].indexOf(s.toLowerCase()) < 0)
           .forEach(s => nodeModules[s] = "commonjs " + s)
@@ -125,22 +147,24 @@ module.exports = function(env) {
       rules: [
         {
           test: /\.jsx?$/i,
-          include: Path.resolve("src"),
-          use: "babel-loader",
+          include: `${rootDir}/src`,
+          loader: "babel-loader",
+          options: (() => {
+            const jsonStr = FileSystem.readFileSync(`${rootDir}/.babelrc`, "utf8")
+            const json = JSON.parse(jsonStr)
+            json.babelrc = false
+            json.presets.filter(p => Array.isArray(p) && p[0] === "es2015")[0][1].modules = false
+            return json
+          })(),
         }, {
           test: /\.css$/i,
-          use: choose(
-            {"client:development": cssLoaders},
-            {"client:production":  ExtractTextPlugin.extract({fallback: cssLoaders[0], use: cssLoaders.slice(1)})},
-            {"server:*":           ExtractTextPlugin.extract({fallback: cssLoaders[0], use: cssLoaders.slice(1)})}
-          ),
+          use: getCssRule(),
         }, {
           test: /\.less$/i,
-          use: choose(
-            {"client:development": cssLoaders.concat("less-loader")},
-            {"client:production":  ExtractTextPlugin.extract({fallback: cssLoaders[0], use: cssLoaders.slice(1).concat("less-loader")})},
-            {"server:*":           ExtractTextPlugin.extract({fallback: cssLoaders[0], use: cssLoaders.slice(1).concat("less-loader")})}
-          ),
+          use: getCssRule("less-loader"),
+        }, {
+          test: /\.scss$/i,
+          use: getCssRule("sass-loader"),
         }, {
           test: /\.(jpe?g|png|gif)$/i,
           use: [
@@ -189,7 +213,7 @@ module.exports = function(env) {
     resolve: {
       extensions: [".js", ".jsx", ".json"],
       alias: {
-        "modernizr$": Path.resolve(".modernizrrc"),
+        "modernizr$": `${rootDir}/.modernizrrc`,
       },
     },
 
@@ -200,6 +224,8 @@ module.exports = function(env) {
         new Webpack.NamedModulesPlugin(),
         new Webpack.NoEmitOnErrorsPlugin(),
         new Webpack.optimize.CommonsChunkPlugin(commonsChunkConfig),
+        staticFilesWriterPlugin,
+        assetsJsonWriterPlugin,
       ]},
       {"client:production": [
         ...commonPlugins,
@@ -209,41 +235,56 @@ module.exports = function(env) {
         new Webpack.optimize.ModuleConcatenationPlugin(),
         new Webpack.optimize.UglifyJsPlugin(),
         new Webpack.optimize.OccurrenceOrderPlugin(),
-        new ExtractTextPlugin({filename: "[name].[contenthash].css", allChunks: true}),
         new OptimizeCssAssetsPlugin(),
-        function() {
-          // replace content bundles in html with minified versions
-          // and copy html to build/dist folder:
-
-          this.plugin("done", statsData => {
-            let stats = statsData.toJson()
-            // uncomment if you need to save stats file and inspect it
-            //FileSystem.writeFileSync(Path.resolve("stats.json"), JSON.stringify(stats, null, "  "), "utf8")
-
-            if (!stats.errors.length) {
-              let htmlFileName = "index.html"
-              let html = FileSystem.readFileSync(Path.resolve("src", htmlFileName), "utf8")
-              let $ = Cheerio.load(html)
-
-              $("#css-bundle-main" ).attr("href", Path.join("/content", stats.assetsByChunkName["main"].find(s => !!s.match(/\.css$/i))))
-              $("#js-bundle-vendor").attr("src",  Path.join("/content", stats.assetsByChunkName["main"].find(s => !!s.match(/\.js$/i))))
-              $("#js-bundle-main"  ).attr("src",  Path.join("/content", stats.assetsByChunkName["vendor"]))
-
-              let htmlOutput = $.html()
-              FileSystem.writeFileSync(`src/${buildClientDir}/${htmlFileName}`, htmlOutput)
-
-              AppConfig.outputStaticFiles
-                .forEach(path => FileSystem.createReadStream(`src/${path}`)
-                  .pipe(FileSystem.createWriteStream(`src/${buildClientDir}/${path}`)))
-            }
-          })
-        },
+        staticFilesWriterPlugin,
+        assetsJsonWriterPlugin,
       ]},
       {"server:*": [
         ...commonPlugins,
-        new ExtractTextPlugin({filename: "main-bundle.css", allChunks: true}),
         new Webpack.NormalModuleReplacementPlugin(/modernizr$/i, "node-noop"),
       ]}
     ),
   }
+
+  return config
+}
+
+function staticFilesWriterPlugin() {
+  AppConfig.outputStaticFiles
+    .forEach(path => {
+      const outPath = `${buildClientDir}/${path}`
+      FileSystem.ensureDirSync(Path.dirname(outPath))
+
+      FileSystem.createReadStream(`${rootDir}/src/${path}`)
+        .pipe(FileSystem.createWriteStream(outPath))
+    })
+
+  if (!AppConfig.universal) // generate "index.html"
+    this.plugin("done", statsData => {
+      const stats = statsData.toJson()
+      // uncomment if you need to save stats file and inspect it
+      //FileSystem.writeFileSync(`${rootDir}/stats.json`, JSON.stringify(stats, null, "  "), "utf8")
+
+      if (!stats.errors.length) {
+        ReactDOMServer.renderToStaticMarkup(React.createElement(HelmetRoot)) // fill Helmet with data
+
+        const assets = getWebpackAssets(stats)
+        const html = ReactDOMServer.renderToStaticMarkup(React.createElement(Html, {
+          helmet: Helmet.renderStatic(),
+          webpackAssets: assets,
+        }))
+
+        FileSystem.writeFileSync(`${buildClientDir}/index.html`, html)
+      }
+    })
+}
+
+function assetsJsonWriterPlugin() {
+  this.plugin("done", statsData => {
+    const stats = statsData.toJson()
+    if (!stats.errors.length) {
+      const assets = getWebpackAssets(stats)
+      FileSystem.writeFileSync(`${buildServerDir}/assets.json`, JSON.stringify(assets, null, "  "), "utf8")
+    }
+  })
 }

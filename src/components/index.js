@@ -1,9 +1,10 @@
 export {default as App} from "./App/App"
 export {default as ContentPage} from "./ContentPage/ContentPage"
+export {default as HelmetRoot} from "./HelmetRoot/HelmetRoot"
 export {default as Home} from "./Home/Home"
+export {default as Html} from "./Html/Html"
 export {default as NotFound} from "./NotFound/NotFound"
-
-export {default as PageHeader} from "./PageHeader/PageHeader"
 export {default as PageFooter} from "./PageFooter/PageFooter"
+export {default as PageHeader} from "./PageHeader/PageHeader"
 export {default as TodoList} from "./TodoList/TodoList"
 export {default as TodoListItem} from "./TodoListItem/TodoListItem"

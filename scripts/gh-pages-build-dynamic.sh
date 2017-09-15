@@ -1,5 +1,5 @@
 SCRIPT_DIR="$(dirname "$0")"
-SRC_FOLDER="$SCRIPT_DIR/../src/build"
+SRC_FOLDER="$SCRIPT_DIR/../src/build/public"
 SRC_INDEX_FILE="$SRC_FOLDER/index.html"
 DEST_FOLDER="$SCRIPT_DIR/../../gh-pages"
 
@@ -19,6 +19,6 @@ rm -fv $DEST_FOLDER/* $DEST_FOLDER/.*
 
 message "\nCopying files...\n\n"
 
-rsync -av --exclude="*.map" --exclude="server.js" $SRC_FOLDER/* $DEST_FOLDER
+rsync -av --exclude="*.map" $SRC_FOLDER/* $DEST_FOLDER
 
 message "\nDone.\n\n"

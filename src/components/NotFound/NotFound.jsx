@@ -1,8 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import * as ReactRouter from "react-router-dom"
-import AppConfig from "../../configs/AppConfig"
-const DocumentTitle = require("react-document-title")
+import Helmet from "react-helmet"
 const Styles = require("./NotFound.less")
 
 export default class NotFound extends React.Component {
@@ -20,14 +19,16 @@ export default class NotFound extends React.Component {
   }
 
   render() {
-    return <DocumentTitle title={AppConfig.getTitle("404")}>
-      <div className={Styles.root}>
-        <div className="body">
-          <div className="header">Page not found</div>
-          <div className="p">Sorry, but the page you were trying to view does not exist.</div>
-          <div className="links"><ReactRouter.Link to="/">🏠</ReactRouter.Link></div>
-        </div>
+    return <div className={Styles.root}>
+      <Helmet>
+        <title>404</title>
+      </Helmet>
+
+      <div className="body">
+        <div className="header">Page not found</div>
+        <div className="p">Sorry, but the page you were trying to view does not exist.</div>
+        <div className="links"><ReactRouter.Link to="/">🏠</ReactRouter.Link></div>
       </div>
-    </DocumentTitle>
+    </div>
   }
 }

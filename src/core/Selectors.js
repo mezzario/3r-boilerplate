@@ -11,7 +11,7 @@ export const getTodosData = createSelector(
 
     let todosView = path
     let filteredTodos = todos
-    let activeTodos = todos.filter(todo => !todo.completed)
+    const activeTodos = todos.filter(todo => !todo.completed)
 
     switch (path) {
       case "active":

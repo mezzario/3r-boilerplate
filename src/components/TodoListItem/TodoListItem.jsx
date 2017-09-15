@@ -43,7 +43,7 @@ export default class TodoListItem extends React.Component {
   }
 
   saveTodoText(newText) {
-    let text = newText.trim()
+    const text = newText.trim()
     if (text && text !== this.props.todo.text)
       this.props.editTodoText({id: this.props.todo.id, text})
 
@@ -58,10 +58,10 @@ export default class TodoListItem extends React.Component {
   }
 
   render() {
-    let {todo} = this.props
-    let {editMode} = this.state
+    const {todo} = this.props
+    const {editMode} = this.state
 
-    return <div className={classNames("ui attached segment", Styles.root, {"completed": todo.completed, "edit": editMode})}
+    return <div className={classNames(Styles.root, "ui attached segment", {"completed": todo.completed, "edit": editMode})}
       style={Object.assign({}, this.props.style)}
       onDoubleClick={() => this.setEditMode(true)}>
 

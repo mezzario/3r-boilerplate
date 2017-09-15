@@ -39,7 +39,7 @@
     "quotes": ["error", "double", { "avoidEscape": true, "allowTemplateLiterals": true }],
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "semi": ["error", "never"],
-    "no-console": "warn",
+    "no-console": "off",
     "no-unused-vars": ["error", { "varsIgnorePattern": "__" }],
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
@@ -50,6 +50,8 @@
     }],
     "object-curly-spacing": ["error", "never"],
     "object-shorthand": ["error", "always"],
+    "prefer-const": "error",
+    "no-var": "error",
 
     "import/no-named-as-default-member": "off",
 

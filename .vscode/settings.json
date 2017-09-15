@@ -1,0 +1,10 @@
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "src/build": true,
+    "**/*.js.map": true,
+    "**/*.css.map": true,
+    "src/content/vendor/semantic": true
+  }
+}

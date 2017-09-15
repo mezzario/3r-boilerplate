@@ -1,19 +1,19 @@
 import React from "react"
 import PropTypes from "prop-types"
 import {Router, Route, Switch} from "react-router-dom"
-import * as Containers from "../components"
+import * as Components from "../components"
 
 export default () =>
-  <Containers.App>
-    <Containers.ContentPage>
+  <Components.App>
+    <Components.ContentPage>
       <Switch>
-        <Route exact path='/' component={Containers.Home} />
-        <Route path="/active" component={Containers.Home} />
-        <Route path="/completed" component={Containers.Home} />
-        <Route path="*" component={Containers.NotFound} />
+        <Route exact path='/' component={Components.Home} />
+        <Route path="/active" component={Components.Home} />
+        <Route path="/completed" component={Components.Home} />
+        <Route path="*" component={Components.NotFound} />
       </Switch>
-    </Containers.ContentPage>
-  </Containers.App>
+    </Components.ContentPage>
+  </Components.App>
 
 // StaticRouter extracted from:
 // https://github.com/ReactTraining/react-router/blob/master/packages/react-router/modules/StaticRouter.js

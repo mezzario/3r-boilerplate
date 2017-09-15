@@ -2,20 +2,20 @@ import "babel-polyfill"
 import React from "react"
 import ReactDOM from "react-dom"
 import * as ReactRedux from "react-redux"
-import Routes from "./core/Routes"
 import * as ReduxRouter from "react-router-redux"
+import * as ReactHotLoader from "react-hot-loader"
+import Routes from "./core/Routes"
 import Store from "./core/Store"
 import History from "./core/History"
 const FastClick = require("fastclick")
-import "./content/index.less"
 import "modernizr"
-import * as ReactHotLoader from "react-hot-loader"
+import "./content/index.less"
 
-const _store = Store(window.__INITIAL_STATE__)
+const store = Store(window.__INITIAL_STATE__)
 
 const render = () => {
   ReactDOM.render(
-    <ReactRedux.Provider store={_store}>
+    <ReactRedux.Provider store={store}>
       <ReduxRouter.ConnectedRouter history={History}>
         <ReactHotLoader.AppContainer>
           <Routes />
@@ -25,20 +25,20 @@ const render = () => {
     document.getElementById("root")
   )
 }
-
 render()
 
 if (__DEVELOPMENT__) {
   // remove server css bundle to not interfere with styles applied by webpack's style-loader
   const cssBundleElem = document.getElementById("css-bundle-main")
-  cssBundleElem.parentNode.removeChild(cssBundleElem)
+  if (cssBundleElem)
+    cssBundleElem.parentNode.removeChild(cssBundleElem)
 
   if (module.hot)
     module.hot.accept("./core/Routes", render)
 }
 
 // remove empty hash from url
-History.listen(() => {
+function handleEmptyHash() {
   if (window.history.replaceState)
     setTimeout(() => {
       const re = /#\/*$/
@@ -46,7 +46,9 @@ History.listen(() => {
       if (re.test(url))
         window.history.replaceState(null, null, url.replace(re, ""))
     }, 100)
-})
+}
+handleEmptyHash()
+History.listen(handleEmptyHash)
 
 if ("addEventListener" in document)
   document.addEventListener("DOMContentLoaded", () => {
