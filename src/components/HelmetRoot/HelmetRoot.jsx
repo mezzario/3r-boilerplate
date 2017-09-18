@@ -17,10 +17,10 @@ export default class HelmetRoot extends React.Component {
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
       <meta name="theme-color" content="#ffffff" />
 
-      <link rel="apple-touch-icon" sizes="180x180" href="/content/favicons/apple-touch-icon.png?v=20170915" />
-      <link rel="icon" type="image/png" sizes="32x32" href="/content/favicons/favicon-32x32.png?v=20170915" />
-      <link rel="icon" type="image/png" sizes="16x16" href="/content/favicons/favicon-16x16.png?v=20170915" />
-      <link rel="manifest" href="/manifest.json" />
+      <link rel="apple-touch-icon" sizes="180x180" href="content/favicons/apple-touch-icon.png?v=20170915" />
+      <link rel="icon" type="image/png" sizes="32x32" href="content/favicons/favicon-32x32.png?v=20170915" />
+      <link rel="icon" type="image/png" sizes="16x16" href="content/favicons/favicon-16x16.png?v=20170915" />
+      <link rel="manifest" href="manifest.json" />
 
       {this.props.children}
     </Helmet>

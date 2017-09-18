@@ -11,6 +11,7 @@ import AppConfig from "./configs/AppConfig"
 import Helmet from "react-helmet"
 import {Html, HelmetRoot} from "./components"
 import * as FileSystem from "fs-extra"
+import * as Path from "path"
 import "./content/index.less"
 
 const app = Express()
@@ -23,10 +24,12 @@ if (__DEVELOPMENT__) {
   const webpackConfigModule = require("../webpack.config.babel.js")
   const webpackConfigure = webpackConfigModule.default
   const webpackConfig = webpackConfigure({target: "client", build: "development"})
-  const webpackCompiler = webpack(webpackConfig, () => webpackFinished = true)
+  const webpackCompiler = webpack(webpackConfig, () => {
+    webpackFinished = true
+  })
 
   app.use(require("webpack-dev-middleware")(webpackCompiler, {
-    publicPath: webpackConfig.output.publicPath,
+    publicPath: Path.join("/", webpackConfig.output.publicPath),
     hot: true,
     stats: {colors: true},
   }))
@@ -39,12 +42,12 @@ FileSystem.ensureDirSync(publicDir)
 process.chdir(publicDir)
 
 const staticMiddleware = Express.static(".")
-const outputStaticFiles = AppConfig.outputStaticFiles.map(s => `/${s.toLowerCase()}`)
+const outputStaticFiles = AppConfig.outputStaticFiles.map(s => s.toLowerCase().replace(/^\/+/, ""))
 
 app.use((req, res, next) => {
-  const url = req.url.toLowerCase()
+  const url = req.url.toLowerCase().replace(/^\/+/, "")
 
-  if (url.startsWith("/content/") || outputStaticFiles.includes(url))
+  if (url.startsWith("content/") || outputStaticFiles.includes(url))
     return staticMiddleware(req, res, next)
 
   next()
@@ -97,7 +100,7 @@ app.use((req, res) => {
     if (__DEVELOPMENT__)
       ReactDOMServer.renderToString( // prevent css flickering for dev env
         <Helmet>
-          <link id="css-bundle-main" href="/content/main-bundle.css" rel="stylesheet" />
+          <link id="css-bundle-main" href="content/main-bundle.css" rel="stylesheet" />
         </Helmet>
       )
   }

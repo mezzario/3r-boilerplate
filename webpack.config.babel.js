@@ -122,7 +122,7 @@ export default function configure(env) {
           {"*:production":  "[name].[id].[chunkhash].js"},
         ),
         pathinfo: env.build === "development",
-        publicPath: "/content/",
+        publicPath: "content/",
       }},
       {"server:*": {
         path: buildServerDir,
@@ -152,8 +152,23 @@ export default function configure(env) {
           options: (() => {
             const jsonStr = FileSystem.readFileSync(`${rootDir}/.babelrc`, "utf8")
             const json = JSON.parse(jsonStr)
+
+            // disable .babelrc
             json.babelrc = false
+
+            // disable transformation of ES6 module syntax to another module type
+            // (required by react-hot-loader)
             json.presets.filter(p => Array.isArray(p) && p[0] === "es2015")[0][1].modules = false
+
+            // add react-hot-loader transformations
+            const rhlPlugin = "react-hot-loader/babel"
+            if (env.target === "client"
+              && env.build === "development"
+              && !(json.plugins || []).some(p => p === rhlPlugin))
+            {
+              json.plugins = (json.plugins || []).concat(rhlPlugin)
+            }
+
             return json
           })(),
         }, {

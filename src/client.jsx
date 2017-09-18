@@ -3,7 +3,6 @@ import React from "react"
 import ReactDOM from "react-dom"
 import * as ReactRedux from "react-redux"
 import * as ReduxRouter from "react-router-redux"
-import * as ReactHotLoader from "react-hot-loader"
 import Routes from "./core/Routes"
 import Store from "./core/Store"
 import History from "./core/History"
@@ -14,17 +13,22 @@ import "./content/index.less"
 const store = Store(window.__INITIAL_STATE__)
 
 const render = () => {
+  let routes = <Routes />
+  if (__DEVELOPMENT__) {
+    const AppContainer = require("react-hot-loader").AppContainer
+    routes = React.createElement(AppContainer, {}, routes)
+  }
+
   ReactDOM.render(
     <ReactRedux.Provider store={store}>
       <ReduxRouter.ConnectedRouter history={History}>
-        <ReactHotLoader.AppContainer>
-          <Routes />
-        </ReactHotLoader.AppContainer>
+        {routes}
       </ReduxRouter.ConnectedRouter>
     </ReactRedux.Provider>,
     document.getElementById("root")
   )
 }
+
 render()
 
 if (__DEVELOPMENT__) {
