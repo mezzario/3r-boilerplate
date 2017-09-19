@@ -11,11 +11,12 @@ import HelmetRoot from "./src/components/HelmetRoot/HelmetRoot.jsx"
 import React from "react"
 const ReactDOMServer = require("react-dom/server")
 import getWebpackAssets from "./src/modules/webpack-assets"
+const templateStr = require("es6-template-strings")
 
 const inlineFileSizeLimit = 16384
 const rootDir = Path.resolve(".").replace(/\/+$/, "")
-const buildServerDir = `${rootDir}/src/build`
-const buildClientDir = `${rootDir}/src/build/public`
+const buildServerDir = Path.join(rootDir, "src/build")
+const buildClientDir = Path.join(buildServerDir, AppConfig.publicSubdir)
 
 export default function configure(env) {
   console.info(Chalk.dim(`\nWebpack config requested for ${env.target}/${env.build}.\n`))
@@ -74,8 +75,8 @@ export default function configure(env) {
     }),
     new ExtractTextPlugin({
       filename: choose(
-        {"server:development": Path.relative(buildServerDir, `${buildClientDir}/content/main-bundle.css`)},
-        {"server:production":  Path.relative(buildServerDir, `${buildClientDir}/content/[name].[contenthash].css`)},
+        {"server:development": Path.relative(buildServerDir, Path.join(buildClientDir, "content/main-bundle.css"))},
+        {"server:production":  Path.relative(buildServerDir, Path.join(buildClientDir, "content/[name].[contenthash].css"))},
         {"*":                  "[name].[contenthash].css"}
       ),
       allChunks: true,
@@ -104,15 +105,15 @@ export default function configure(env) {
       {"client:development": [
         "webpack-hot-middleware/client?reload=true",
         "react-hot-loader/patch",
-        `${rootDir}/src/client.jsx`,
+        Path.join(rootDir, "src/client.jsx"),
       ]},
-      {"client:production": [`${rootDir}/src/client.jsx`]},
-      {"server:*":          [`${rootDir}/src/server.jsx`]}
+      {"client:production": [Path.join(rootDir, "src/client.jsx")]},
+      {"server:*":          [Path.join(rootDir, "src/server.jsx")]}
     ),
 
     output: choose(
       {"client:*": {
-        path: `${buildClientDir}/content`,
+        path: Path.join(buildClientDir, "content"),
         filename: choose(
           {"*:development": "main-bundle.js"},
           {"*:production":  "[name].[hash].js"},
@@ -122,7 +123,7 @@ export default function configure(env) {
           {"*:production":  "[name].[id].[chunkhash].js"},
         ),
         pathinfo: env.build === "development",
-        publicPath: "content/",
+        publicPath: Path.join(AppConfig.webRoot, "content/"),
       }},
       {"server:*": {
         path: buildServerDir,
@@ -147,10 +148,10 @@ export default function configure(env) {
       rules: [
         {
           test: /\.jsx?$/i,
-          include: `${rootDir}/src`,
+          include: Path.join(rootDir, "src"),
           loader: "babel-loader",
           options: (() => {
-            const jsonStr = FileSystem.readFileSync(`${rootDir}/.babelrc`, "utf8")
+            const jsonStr = FileSystem.readFileSync(Path.join(rootDir, ".babelrc"), "utf8")
             const json = JSON.parse(jsonStr)
 
             // disable .babelrc
@@ -228,7 +229,7 @@ export default function configure(env) {
     resolve: {
       extensions: [".js", ".jsx", ".json"],
       alias: {
-        "modernizr$": `${rootDir}/.modernizrrc`,
+        "modernizr$": Path.join(rootDir, ".modernizrrc"),
       },
     },
 
@@ -265,20 +266,31 @@ export default function configure(env) {
 }
 
 function staticFilesWriterPlugin() {
-  AppConfig.outputStaticFiles
-    .forEach(path => {
-      const outPath = `${buildClientDir}/${path}`
-      FileSystem.ensureDirSync(Path.dirname(outPath))
+  const {staticFiles} = AppConfig
 
-      FileSystem.createReadStream(`${rootDir}/src/${path}`)
-        .pipe(FileSystem.createWriteStream(outPath))
+  Object.keys(staticFiles)
+    .forEach(path => {
+      const srcPath = Path.join(rootDir, "src", path)
+      const dstPath = Path.join(buildClientDir, path)
+      const params = staticFiles[path] ? staticFiles[path].call() : null
+
+      FileSystem.ensureDirSync(Path.dirname(dstPath))
+
+      if (params) {
+        let text = FileSystem.readFileSync(srcPath, "utf8")
+        text = templateStr(text, params)
+        FileSystem.writeFileSync(dstPath, text, "utf8")
+      }
+      else
+        FileSystem.createReadStream(srcPath)
+          .pipe(FileSystem.createWriteStream(dstPath))
     })
 
   if (!AppConfig.universal) // generate "index.html"
     this.plugin("done", statsData => {
       const stats = statsData.toJson()
       // uncomment if you need to save stats file and inspect it
-      //FileSystem.writeFileSync(`${rootDir}/stats.json`, JSON.stringify(stats, null, "  "), "utf8")
+      //FileSystem.writeFileSync(Path.join(rootDir, "stats.json"), JSON.stringify(stats, null, "  "), "utf8")
 
       if (!stats.errors.length) {
         ReactDOMServer.renderToStaticMarkup(React.createElement(HelmetRoot)) // fill Helmet with data
@@ -289,7 +301,7 @@ function staticFilesWriterPlugin() {
           webpackAssets: assets,
         }))
 
-        FileSystem.writeFileSync(`${buildClientDir}/index.html`, html)
+        FileSystem.writeFileSync(Path.join(buildClientDir, "index.html"), html)
       }
     })
 }
@@ -299,7 +311,7 @@ function assetsJsonWriterPlugin() {
     const stats = statsData.toJson()
     if (!stats.errors.length) {
       const assets = getWebpackAssets(stats)
-      FileSystem.writeFileSync(`${buildServerDir}/assets.json`, JSON.stringify(assets, null, "  "), "utf8")
+      FileSystem.writeFileSync(Path.join(buildServerDir, "assets.json"), JSON.stringify(assets, null, "  "), "utf8")
     }
   })
 }
