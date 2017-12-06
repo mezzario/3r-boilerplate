@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import Helmet from "react-helmet"
-import Path from "path"
+import urlJoin from "../../modules/utils/urlJoin"
 import AppConfig from "../../configs/AppConfig"
 
 export default class HelmetRoot extends React.Component {
@@ -11,7 +11,7 @@ export default class HelmetRoot extends React.Component {
 
   render() {
     const {webRoot} = AppConfig
-    const faviconsPath = Path.join(webRoot, "content/favicons")
+    const faviconsPath = urlJoin(webRoot, "content/favicons")
 
     return <Helmet titleTemplate="Todos · %s" defaultTitle="Todos">
       <html lang="en" />

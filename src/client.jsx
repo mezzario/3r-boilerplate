@@ -7,7 +7,7 @@ import Routes from "./core/Routes"
 import Store from "./core/Store"
 import History from "./core/History"
 const FastClick = require("fastclick")
-import "modernizr"
+import "modernizr" // to set classes on 'html' tag
 import "./content/index.less"
 
 const store = Store(window.__INITIAL_STATE__)

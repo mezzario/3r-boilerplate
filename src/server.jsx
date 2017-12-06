@@ -12,6 +12,7 @@ import Helmet from "react-helmet"
 import {Html, HelmetRoot} from "./components"
 import * as FileSystem from "fs-extra"
 import * as Path from "path"
+import urlJoin from "./modules/utils/urlJoin"
 import "./content/index.less"
 
 const app = Express()
@@ -70,13 +71,13 @@ function main() {
   // main routine should be run inside website's dir
   process.chdir(publicDir)
 
-  const staticMw = Express.static(".")
-  const preparePath = path => path.toLowerCase().replace(/^\/+/, "")
-  const staticFiles = Object.keys(AppConfig.staticFiles).map(preparePath)
-  const contentPath = Path.join(preparePath(AppConfig.webRoot), "content/")
+  const staticMw = Express.static(".", {fallthrough: false})
+  const prepareUrl = path => Path.normalize(path).toLowerCase().replace(/^\/+/, "")
+  const staticFiles = Object.keys(AppConfig.staticFiles).map(prepareUrl)
+  const contentPath = urlJoin(prepareUrl(AppConfig.webRoot), "content/")
 
   app.use((req, res, next) => {
-    const url = preparePath(req.url)
+    const url = prepareUrl(req.url)
 
     if (url.startsWith(contentPath) || staticFiles.includes(url))
       return staticMw(req, res, next)
@@ -127,7 +128,7 @@ function main() {
           <Helmet>
             <link
               id="css-bundle-main"
-              href={Path.join(AppConfig.webRoot, "content/main-bundle.css")}
+              href={urlJoin(AppConfig.webRoot, "content/main-bundle.css")}
               rel="stylesheet"
             />
           </Helmet>

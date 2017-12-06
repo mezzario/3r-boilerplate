@@ -222,14 +222,14 @@ export default function configure(env) {
         {test: /\.woff2$/i, loader: "url-loader", query: {limit: inlineFileSizeLimit, mimetype: "application/font-woff2"}},
         {test: /\.svg$/i,   loader: "url-loader", query: {limit: inlineFileSizeLimit, mimetype: "image/svg+xml"}},
 
-        {test: /\.modernizrrc$/i, use: ["modernizr-loader", "json-loader"]},
+        {test: /\.modernizrrc\.js$/i, loader: "modernizr-loader"},
       ],
     },
 
     resolve: {
       extensions: [".js", ".jsx", ".json"],
       alias: {
-        "modernizr$": Path.join(rootDir, ".modernizrrc"),
+        "modernizr$": Path.join(rootDir, ".modernizrrc.js"),
       },
     },
 

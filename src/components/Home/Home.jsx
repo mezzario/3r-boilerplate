@@ -8,7 +8,7 @@ const classNames = require("classnames")
 const Styles = require("./Home.less")
 import * as Action from "../../core/Actions"
 import {TodoList} from "../../components"
-const Modernizr = require("modernizr")
+import Modernizr from "modernizr"
 import AppHistory from "../../core/History"
 const _ = {debounce: require("lodash.debounce")}
 import {getTodosData} from "../../core/Selectors"
